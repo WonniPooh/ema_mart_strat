@@ -467,6 +467,8 @@ class MainWindow(QMainWindow):
         self.ui.configuredSymbolsVLayout.addWidget(widget)
 
     def start_single_strategy(self):
+        if not self.check_uid():
+            return
         symbol = self.sender().objectName().split("_")[0]
         self.strat_manager.init_strategy(symbol, True, self.on_strat_new_status)
 
