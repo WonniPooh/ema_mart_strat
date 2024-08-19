@@ -10,8 +10,15 @@ FUTURES_PRICES_URL = "/openApi/swap/v1/ticker/price"
 FUTURES_KLINES_URL = "/openApi/swap/v3/quote/klines"
 FUTURES_SET_LEVERAGE_URL = "/openApi/swap/v2/trade/leverage"
 
-APIKEY = "qgnqgQ9vqnoxxDtYaJZYRl22KsuwVIySD3teO4zbXnUltrPBncymZFKwEio4MbABvVvFTEpDj8YL5LWlde3Q"
-SECRETKEY = "6HoHlHtGzID4GFTYb5au3xcH9QqJRpxb3OMr5pdK0xZUXtdhtaKK4LqsLZGeukhQm40Cbl4rEeTYKEyugJwVA"
+APIKEY = ""
+SECRETKEY = ""
+
+with open("account.json") as f:
+    keys = f.read()
+    keys = keys.split("\n")
+    APIKEY = keys[0]
+    SECRETKEY = keys[1]
+
 
 def get_available_futures_contracts():
     method = "GET"
