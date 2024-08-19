@@ -100,6 +100,7 @@ class StrategyManager(QObject):
 
         self.symbols_prices = {}
         self.symbols_data = bingx_api.get_available_futures_contracts()
+        bingx_api.change_dual_side(False)
         self.update_available_funds()
 
         self.max_open_positions_allowed = MAX_STRAT_IN_POSITION

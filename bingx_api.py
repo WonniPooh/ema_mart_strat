@@ -156,17 +156,19 @@ def set_leverage(leverage, symbol, is_single_side=True):
         if jsoned_result["code"] != 0:
             print(f"Error appeared during 'set_leverage' {side} change: {jsoned_result}")
 
-def change_dual_side(is_dual_side):
+def change_dual_side(is_dual_side: bool):
     path = '/openApi/swap/v1/positionSide/dual'
     method = "POST"
     paramsMap = {
-        "dualSidePosition": str(is_dual_side)
+        "dualSidePosition": str(is_dual_side).lower()
     }
 
     result = send_request(method, path, paramsMap)
     jsoned_result = json.loads(result)
     if jsoned_result["code"] != 0:
        print(f"Error appeared during 'change_dual_side': {jsoned_result}")
+    else:
+        print(f"Dual side position change success: {jsoned_result}")
 
 
 def get_order_details(symbol, order_id):

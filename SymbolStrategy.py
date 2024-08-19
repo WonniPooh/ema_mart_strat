@@ -278,7 +278,6 @@ class SymbolStrategy(QObject):
         self.manager.update_available_funds()
 
     def check_signal(self, new_price):
-        return 1
         signal = None
         LONG = 1
         SHORT = -1
