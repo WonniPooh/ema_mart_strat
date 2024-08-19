@@ -228,7 +228,7 @@ class MainWindow(QMainWindow):
         file_filter = "JSON files (*.json)"
         cfg_filename = QFileDialog.getOpenFileName(parent=self,
                                                    caption="Select config file to load:",
-                                                   dir=os.getcwd(),
+                                                   dir=os.getcwd() + "/configs",
                                                    filter=file_filter)
         loaded_cfg = None
         with open(cfg_filename[0], "r") as f:
@@ -258,7 +258,7 @@ class MainWindow(QMainWindow):
         file_filter = "JSON files (*.json)"
         cfg_filename = QFileDialog.getSaveFileName(parent=self,
                                                    caption="Choose filename to save config to:",
-                                                   dir=os.getcwd(),
+                                                   dir=os.getcwd() + "/configs",
                                                    filter=file_filter)
         if cfg_filename[0] == "":
             return
