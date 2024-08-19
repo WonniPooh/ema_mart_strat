@@ -238,7 +238,7 @@ class StrategyManager(QObject):
 
             counter += 1
             if counter >= 3:
-                self.update_available_funds
+                self.update_available_funds()
                 counter = 0
             
             print(f"Sleeping {10 - time.time()%10 + 0.05} before next price update")
