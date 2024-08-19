@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1044</width>
+    <height>827</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_12">
+    <item row="0" column="1">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tab_general">
+       <attribute name="title">
+        <string>Общая Статистика</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0,0,0,0,0,0,0,0,0">
+        <item row="2" column="0">
+         <widget class="QPushButton" name="rapid_stop_all_btn">
+          <property name="styleSheet">
+           <string notr="true">background: rgb(237, 51, 59);
+font: 11pt &quot;Cantarell&quot;;
+color:  rgb(0, 0, 0); </string>
+          </property>
+          <property name="text">
+           <string>Market Stop All</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="stop_all_btn">
+          <property name="text">
+           <string>Stop New Signals</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QPushButton" name="refresh_open_deals_btn">
+          <property name="text">
+           <string>Обновить</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QPushButton" name="refresh_finished_deals_btn">
+          <property name="text">
+           <string>Обновить</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QLabel" name="logger_lbl">
+          <property name="text">
+           <string>События работы стратегий:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Открытые позиции</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" rowspan="3">
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="1" column="1">
+           <widget class="QLabel" name="depo_start_val">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="tss_lbl">
+            <property name="text">
+             <string>Время с момента запуска: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="depo_current_lbl">
+            <property name="text">
+             <string>Текущий депозит:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="depo_current_val">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="depo_start_lbl">
+            <property name="text">
+             <string>Депозит на момент запуска:  </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="tss_val">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="depo_delta_lbl">
+            <property name="text">
+             <string>Изменение депозита:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLabel" name="depo_delta_val">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="finished_deals_lbl">
+          <property name="text">
+           <string>Завершенные сделки</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="2">
+         <widget class="QTableView" name="finished_deals_table"/>
+        </item>
+        <item row="0" column="0">
+         <widget class="QPushButton" name="start_all_btn">
+          <property name="styleSheet">
+           <string notr="true">background: rgb(143, 240, 164);
+font: 11pt &quot;Cantarell&quot;;
+color:  rgb(0, 0, 0);</string>
+          </property>
+          <property name="text">
+           <string>Start All</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="0" colspan="2">
+         <widget class="QTextBrowser" name="logger_field"/>
+        </item>
+        <item row="4" column="0" colspan="2">
+         <widget class="QTableView" name="open_deals_table"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_settings">
+       <attribute name="title">
+        <string>Управление</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="1">
+         <widget class="QPushButton" name="load_cfg_btn">
+          <property name="text">
+           <string>Загрузить конфигурацию</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Сконфигурированые Активы</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" rowspan="6">
+         <widget class="QScrollArea" name="configuredSymbolsScrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="configuredSymbolsScrollAreaWidget">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>497</width>
+             <height>613</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <layout class="QVBoxLayout" name="configuredSymbolsVLayout">
+              <item>
+               <spacer name="verticalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="save_cfg_btn">
+          <property name="text">
+           <string>Сохранить текущую конфигурацию</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="header_3">
+          <property name="text">
+           <string>Пареметры входа в сделку:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QPushButton" name="clean_input_btn">
+          <property name="text">
+           <string>Очистить ввод</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,2">
+          <item row="0" column="1">
+           <widget class="QLabel" name="rp_lbl">
+            <property name="text">
+             <string>Значение (%)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="sl_lbl">
+            <property name="text">
+             <string>Стоп</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="sl_input"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="tp1_lbl">
+            <property name="text">
+             <string>ТП</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="tp_input"/>
+          </item>
+         </layout>
+        </item>
+        <item row="8" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="total_symbols">
+            <property name="text">
+             <string>Всего пар:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="total_symbols_val">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="7" column="1">
+         <widget class="QPushButton" name="add_asset_cfg_btn">
+          <property name="text">
+           <string>Добавить</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <layout class="QGridLayout" name="gridLayout" columnstretch="1,1">
+          <item row="4" column="0">
+           <widget class="QLabel" name="margin_type_lbl">
+            <property name="text">
+             <string>Тип Маржи</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="direction_lbl">
+            <property name="text">
+             <string>Направление</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="slow_ema_period_input">
+            <property name="text">
+             <string>23</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="slow_ema_period_lbl">
+            <property name="text">
+             <string>Период Медленной
+ЕМА (баров)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="QLabel" name="min_delta_perc_lbl">
+            <property name="text">
+             <string>Мин. Дельта докупа, %</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="margin_type_input">
+            <item>
+             <property name="text">
+              <string>Изолейт</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Кросс</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="11" column="1">
+           <widget class="QLineEdit" name="min_delta_perc_input">
+            <property name="text">
+             <string>1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QLineEdit" name="pause_bars_num_input">
+            <property name="text">
+             <string>5</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="max_mart_depth_input">
+            <property name="text">
+             <string>2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="deal_deposit_input">
+            <property name="inputMask">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="leverage_lbl">
+            <property name="text">
+             <string>Плечо</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="fast_ema_period_lbl">
+            <property name="text">
+             <string>Период Быстрой
+ЕМА (баров)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="pause_bars_num_lbl">
+            <property name="text">
+             <string>Пауза, кол-во Баров</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="asset_lbl">
+            <property name="text">
+             <string>Актив</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="tf_lbl">
+            <property name="text">
+             <string>Таймфрейм</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="tf_input">
+            <item>
+             <property name="text">
+              <string>1m</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>3m</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>5m</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>15m</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>30m</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1h</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>4h</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>6h</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>12h</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="fast_ema_period_input">
+            <property name="text">
+             <string>9</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="max_mart_depth_lbl">
+            <property name="text">
+             <string>Макс
+Глубина Мартингейл</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="leverage_input">
+            <property name="text">
+             <string>1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="symbol_input">
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="deal_deposit_lbl">
+            <property name="text">
+             <string>Сумма 1 Входа
+(без учёта плеча)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="direction_input">
+            <item>
+             <property name="text">
+              <string>BOTH</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Только LONG</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Только SHORT</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="mart_coef_input">
+            <property name="text">
+             <string>25</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="mart_coef_lbl">
+            <property name="text">
+             <string>Увеличение при Мартингейл, %</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLabel" name="header_2">
+          <property name="text">
+           <string>Пареметры выхода из сделки</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1,0">
+          <item>
+           <widget class="QLabel" name="max_simultaneous_deals_lbl">
+            <property name="text">
+             <string>Сделок одновременно (макс 10)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="max_simultaneous_deals_input">
+            <property name="text">
+             <string>5</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="max_simultaneous_deals_btn">
+            <property name="text">
+             <string>Apply</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1044</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
