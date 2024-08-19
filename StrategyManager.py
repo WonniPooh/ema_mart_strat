@@ -222,6 +222,7 @@ class StrategyManager(QObject):
             strat.stop_updates()
 
     def update_prices(self):
+        counter = 0
         while True:
             self.symbols_prices = bingx_api.get_current_price()
             for symbol, strategy in self.strategies.items():
@@ -235,9 +236,14 @@ class StrategyManager(QObject):
                     else:
                         print("No price for {symbol}")
 
+            counter += 1
+            if counter >= 3:
+                self.update_available_funds
+                counter = 0
+            
             print(f"Sleeping {10 - time.time()%10 + 0.05} before next price update")
             time.sleep(10 - time.time()%10 + 0.05)
-
+            
     def update_balance(self):
         while True:
             try:
