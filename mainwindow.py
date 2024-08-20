@@ -365,7 +365,9 @@ class MainWindow(QMainWindow):
 
         cfg.deal_deposit = float(deal_deposit)
         cfg.margin_type = self.ui.margin_type_input.currentText()
-        cfg.direction = self.ui.direction_input.currentIndex()
+        cfg.allowed_direction = self.ui.allowed_direction_input.currentIndex()
+        if cfg.allowed_direction == 2:
+            cfg.allowed_direction = -1
         cfg.margin_type_index = self.ui.margin_type_input.currentIndex()
 
         if symbol in self.strat_manager.symbols_cfg:
@@ -390,7 +392,10 @@ class MainWindow(QMainWindow):
         self.ui.leverage_input.setText(str(cfg.leverage))
         self.ui.deal_deposit_input.setText(str(cfg.deal_deposit))
         self.ui.margin_type_input.setCurrentIndex(cfg.margin_type_index)
-        self.ui.direction_input.setCurrentIndex(cfg.direction)
+        if cfg.allowed_direction != -1:
+            self.ui.allowed_direction_input.setCurrentIndex(cfg.allowed_direction)
+        else:
+            self.ui.allowed_direction_input.setCurrentIndex(2)
         self.ui.tp_input.setText(str(cfg.tp))
         self.ui.sl_input.setText(str(cfg.sl))
 

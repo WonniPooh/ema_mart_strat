@@ -374,13 +374,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.deal_deposit_lbl, 3, 0, 1, 1)
 
-        self.direction_input = QComboBox(self.tab_settings)
-        self.direction_input.addItem("")
-        self.direction_input.addItem("")
-        self.direction_input.addItem("")
-        self.direction_input.setObjectName(u"direction_input")
+        self.allowed_direction_input = QComboBox(self.tab_settings)
+        self.allowed_direction_input.addItem("")
+        self.allowed_direction_input.addItem("")
+        self.allowed_direction_input.addItem("")
+        self.allowed_direction_input.setObjectName(u"allowed_direction_input")
 
-        self.gridLayout.addWidget(self.direction_input, 5, 1, 1, 1)
+        self.gridLayout.addWidget(self.allowed_direction_input, 5, 1, 1, 1)
 
         self.mart_coef_input = QLineEdit(self.tab_settings)
         self.mart_coef_input.setObjectName(u"mart_coef_input")
@@ -511,9 +511,9 @@ class Ui_MainWindow(object):
         self.leverage_input.setText(QCoreApplication.translate("MainWindow", u"1", None))
         self.deal_deposit_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0443\u043c\u043c\u0430 1 \u0412\u0445\u043e\u0434\u0430\n"
 "(\u0431\u0435\u0437 \u0443\u0447\u0451\u0442\u0430 \u043f\u043b\u0435\u0447\u0430)", None))
-        self.direction_input.setItemText(0, QCoreApplication.translate("MainWindow", u"BOTH", None))
-        self.direction_input.setItemText(1, QCoreApplication.translate("MainWindow", u"\u0422\u043e\u043b\u044c\u043a\u043e LONG", None))
-        self.direction_input.setItemText(2, QCoreApplication.translate("MainWindow", u"\u0422\u043e\u043b\u044c\u043a\u043e SHORT", None))
+        self.allowed_direction_input.setItemText(0, QCoreApplication.translate("MainWindow", u"BOTH", None))
+        self.allowed_direction_input.setItemText(1, QCoreApplication.translate("MainWindow", u"\u0422\u043e\u043b\u044c\u043a\u043e LONG", None))
+        self.allowed_direction_input.setItemText(2, QCoreApplication.translate("MainWindow", u"\u0422\u043e\u043b\u044c\u043a\u043e SHORT", None))
 
         self.mart_coef_input.setText(QCoreApplication.translate("MainWindow", u"25", None))
         self.mart_coef_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0423\u0432\u0435\u043b\u0438\u0447\u0435\u043d\u0438\u0435 \u043f\u0440\u0438 \u041c\u0430\u0440\u0442\u0438\u043d\u0433\u0435\u0439\u043b, %", None))
