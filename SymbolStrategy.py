@@ -287,6 +287,11 @@ class SymbolStrategy(QObject):
         elif self.fast_ema[-2] > self.slow_ema[-2] and self.fast_ema[-1] < self.slow_ema[-1]:
             signal = SHORT
 
+        if signal is not None and self.current_position_side is None and self.cfg.allowed_direction != 0:
+            if self.cfg.allowed_direction != signal:
+                print(f"Skip signal due to only {'LONG' if signal == 1 else 'SHORT'} signals allowed")
+                signal = None
+
         if signal is not None and self.current_position_side is not None:
             if signal != self.current_position_side:
                 print(f"Opposite direction signal while aready in {'LONG' if self.current_position_side == 1 else 'SHORT'} position")

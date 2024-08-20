@@ -17,7 +17,7 @@ class StrategyCfg:
         self.timeframe = ""
         self.timeframe_index = 0
         self.timeframe_duration = 0
-        self.direction = 0
+        self.allowed_direction = 0
         self.deal_deposit = None
         self.margin_type = None
         self.margin_type_index = None
@@ -36,7 +36,7 @@ class StrategyCfg:
 
     def parse_jsoned_cfg(self, symbol, symbol_data):
         self.symbol = symbol
-        self.direction = symbol_data["direction"]
+        self.allowed_direction = symbol_data["allowed_direction"]
         self.deal_deposit = symbol_data["deal_deposit"]
         self.margin_type = symbol_data["margin_type"]
         self.margin_type_index = symbol_data["margin_type_index"]
@@ -58,7 +58,7 @@ class StrategyCfg:
 
     def construct_cfg_dump(self):
         cfg_dump = {"leverage":self.leverage,
-                    "direction":self.direction,
+                    "allowed_direction":self.allowed_direction,
                     "deal_deposit":self.deal_deposit,
                     "tf":self.timeframe,
                     "tf_index":self.timeframe_index,
@@ -140,10 +140,17 @@ class StrategyManager(QObject):
         print(f"Max open positions allowed: {self.max_open_positions_allowed}")
 
     def update_available_funds(self):
-        self.funds = bingx_api.get_balance()
+        try:
+            self.funds = bingx_api.get_balance()
+        except Exception as e:
+            handle_exception(e)
 
     def get_available_margin(self):
-        return self.funds["availableMargin"]
+        try:
+            return self.funds["availableMargin"]
+        except Exception as e:
+            handle_exception(e)
+            return 0
 
     def get_quantity_precision(self, symbol):
         return self.symbols_data[symbol]["quantityPrecision"]
