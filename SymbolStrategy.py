@@ -102,7 +102,7 @@ class SymbolStrategy(QObject):
         self.avg_price = 0
 
         self.tp_price = 0
-        self.sl_price = 0
+        self.sl_price = None
         self.last_update_ts = 0
         self.ts_deal_start = 0
 
@@ -195,14 +195,14 @@ class SymbolStrategy(QObject):
 
     def process_new_price(self, new_price):
         if self.current_position_side == 1: #long
-            if self.sl_price >= new_price:
+            if self.sl_price is not None and self.sl_price >= new_price:
                 order_result = bingx_api.new_market_order(self.symbol, side="SELL", quantity=self.total_position_size)
                 self.process_position_closed(order_result)
             if self.tp_price <= new_price:
                 order_result = bingx_api.new_market_order(self.symbol, side="SELL", quantity=self.total_position_size)
                 self.process_position_closed(order_result)
         elif self.current_position_side == -1: #short
-            if self.sl_price <= new_price:
+            if self.sl_price is not None and self.sl_price <= new_price:
                 order_result = bingx_api.new_market_order(self.symbol, side="BUY", quantity=self.total_position_size)
                 self.process_position_closed(order_result)
 
@@ -266,7 +266,10 @@ class SymbolStrategy(QObject):
         self.avg_price = self.total_position_value / self.total_position_size
 
         self.tp_price = self.avg_price * (100+self.current_position_side*self.cfg.tp) / 100
-        self.sl_price = self.avg_price * (100+self.current_position_side*self.cfg.sl*(-1)) / 100
+        if self.cfg.sl is not None:
+            self.sl_price = self.avg_price * (100+self.current_position_side*self.cfg.sl*(-1)) / 100
+        else:
+            self.sl_price = None
         self.next_order_size *= (1+(self.cfg.mart_coef / 100))
         self.mart_current_steps += 1
 

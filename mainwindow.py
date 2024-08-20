@@ -338,7 +338,11 @@ class MainWindow(QMainWindow):
             return
 
         try:
-            sl_val = float(self.ui.sl_input.text())
+            sl = self.ui.sl_input.text()
+            if sl != "":
+                sl_val = float(sl)
+            else:
+                sl_val = None
         except Exception as e:
             self.popError(f"Не могу считать значение Стопа: " + str(e))
             return
