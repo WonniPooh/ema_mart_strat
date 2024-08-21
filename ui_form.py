@@ -201,6 +201,21 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.tp1_lbl = QLabel(self.tab_settings)
+        self.tp1_lbl.setObjectName(u"tp1_lbl")
+
+        self.gridLayout_2.addWidget(self.tp1_lbl, 2, 0, 1, 1)
+
+        self.tp_input = QLineEdit(self.tab_settings)
+        self.tp_input.setObjectName(u"tp_input")
+
+        self.gridLayout_2.addWidget(self.tp_input, 2, 1, 1, 1)
+
+        self.sl_input = QLineEdit(self.tab_settings)
+        self.sl_input.setObjectName(u"sl_input")
+
+        self.gridLayout_2.addWidget(self.sl_input, 1, 1, 1, 1)
+
         self.rp_lbl = QLabel(self.tab_settings)
         self.rp_lbl.setObjectName(u"rp_lbl")
         self.rp_lbl.setAlignment(Qt.AlignCenter)
@@ -212,20 +227,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.sl_lbl, 1, 0, 1, 1)
 
-        self.sl_input = QLineEdit(self.tab_settings)
-        self.sl_input.setObjectName(u"sl_input")
+        self.ema_cross_close_lbl = QLabel(self.tab_settings)
+        self.ema_cross_close_lbl.setObjectName(u"ema_cross_close_lbl")
 
-        self.gridLayout_2.addWidget(self.sl_input, 1, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.ema_cross_close_lbl, 3, 0, 1, 1)
 
-        self.tp1_lbl = QLabel(self.tab_settings)
-        self.tp1_lbl.setObjectName(u"tp1_lbl")
+        self.ema_cross_tp_input = QLineEdit(self.tab_settings)
+        self.ema_cross_tp_input.setObjectName(u"ema_cross_tp_input")
 
-        self.gridLayout_2.addWidget(self.tp1_lbl, 2, 0, 1, 1)
-
-        self.tp_input = QLineEdit(self.tab_settings)
-        self.tp_input.setObjectName(u"tp_input")
-
-        self.gridLayout_2.addWidget(self.tp_input, 2, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.ema_cross_tp_input, 3, 1, 1, 1)
 
         self.gridLayout_2.setColumnStretch(0, 1)
         self.gridLayout_2.setColumnStretch(1, 2)
@@ -470,9 +480,12 @@ class Ui_MainWindow(object):
         self.save_cfg_btn.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0442\u0435\u043a\u0443\u0449\u0443\u044e \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044e", None))
         self.header_3.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u0435\u043c\u0435\u0442\u0440\u044b \u0432\u0445\u043e\u0434\u0430 \u0432 \u0441\u0434\u0435\u043b\u043a\u0443:", None))
         self.clean_input_btn.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0432\u0432\u043e\u0434", None))
+        self.tp1_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0422\u041f", None))
         self.rp_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435 (%)", None))
         self.sl_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0442\u043e\u043f", None))
-        self.tp1_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0422\u041f", None))
+        self.ema_cross_close_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0412\u044b\u0445\u043e\u0434 EMA CROSS", None))
+        self.ema_cross_tp_input.setInputMask("")
+        self.ema_cross_tp_input.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u041c\u0438\u043d. % \u0434\u043b\u044f \u043e\u0442\u0440\u0430\u0431\u043e\u0442\u043a\u0438", None))
         self.total_symbols.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0441\u0435\u0433\u043e \u043f\u0430\u0440:", None))
         self.total_symbols_val.setText("")
         self.add_asset_cfg_btn.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c", None))

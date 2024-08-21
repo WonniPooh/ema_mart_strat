@@ -143,9 +143,9 @@ def parseParam(paramsMap):
     sortedKeys = sorted(paramsMap)
     paramsStr = "&".join(["%s=%s" % (x, paramsMap[x]) for x in sortedKeys])
     if paramsStr != "":
-     return paramsStr+"&timestamp="+str(int(time.time() * 1000))
+        return paramsStr+"&timestamp="+str(int(time.time() * 1000))
     else:
-     return paramsStr+"timestamp="+str(int(time.time() * 1000))
+        return paramsStr+"timestamp="+str(int(time.time() * 1000))
 
 @retry_handle_except
 def get_balance(): #availableMargin, balance

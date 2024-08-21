@@ -24,6 +24,7 @@ class StrategyCfg:
         self.leverage = 1
         self.tp = None
         self.sl = None
+        self.ema_cross_tp = None
 
         self.ema_slow = None
         self.ema_fast = None
@@ -55,6 +56,7 @@ class StrategyCfg:
 
         self.pause_bars = symbol_data["pause_bars"]
         self.min_delta_perc = symbol_data["min_delta_perc"]
+        self.ema_cross_tp = symbol_data.get("ema_cross_tp")
 
     def construct_cfg_dump(self):
         cfg_dump = {"leverage":self.leverage,
@@ -66,6 +68,7 @@ class StrategyCfg:
                     "margin_type_index":self.margin_type_index,
                     "tp":self.tp,
                     "sl":self.sl,
+                    "ema_cross_tp":self.ema_cross_tp,
                     "ema_slow":self.ema_slow,
                     "ema_fast":self.ema_fast,
                     "max_mart_depth": self.max_mart_depth,
@@ -232,6 +235,8 @@ class StrategyManager(QObject):
         counter = 0
         while True:
             self.symbols_prices = bingx_api.get_current_price()
+            if self.symbols_prices is None:
+                self.symbols_prices = {}
             for symbol, strategy in self.strategies.items():
                 if not strategy.stopped:
                     price = self.symbols_prices.get(symbol)

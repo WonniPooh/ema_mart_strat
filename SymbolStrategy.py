@@ -8,6 +8,9 @@ from PySide6.QtCore import QObject, Signal
 from common import *
 import bingx_api
 
+LONG = 1
+SHORT = -1
+
 def generate_id(length):
     alphabet = string.ascii_letters + string.digits
     order_id = ''.join(secrets.choice(alphabet) for i in range(length))
@@ -225,10 +228,30 @@ class SymbolStrategy(QObject):
             self.bars_delay -= 1
             print(f"Bars dealy left: {self.bars_delay}")
 
-        signal = self.check_signal(new_price)
-
+        signal = self.check_signal()
         if signal is None:
             return
+        
+        if self.cfg.ema_cross_tp is not None and self.current_position_side is not None and self.current_position_side != signal:
+            should_close = False
+            position_gain = 0
+            if self.current_position_side == LONG and ((new_price - self.avg_price) / self.avg_price) > self.cfg.ema_cross_tp / 100:
+                should_close = True
+                position_gain = ((self.avg_price - new_price) / self.avg_price)
+
+            if self.current_position_side == SHORT and ((self.avg_price - new_price) / self.avg_price) > self.cfg.ema_cross_tp / 100:
+                should_close = True
+                position_gain = ((self.avg_price - new_price) / self.avg_price)
+
+            if should_close:
+                print(f"Closing position: EMA CROSS + position gain {round(position_gain*100, 2)} > min allowed: {self.cfg.ema_cross_tp}")
+                order_result = bingx_api.new_market_order(self.symbol, side="SELL" if self.current_position_side == 1 else "BUY",
+                                                          quantity=self.total_position_size)
+                self.process_position_closed(order_result)
+                return
+
+        if not self.validate_signal(signal, new_price):
+            return   
 
         available_funds = float(self.manager.get_available_margin())
 
@@ -280,42 +303,43 @@ class SymbolStrategy(QObject):
 
         self.manager.update_available_funds()
 
-    def check_signal(self, new_price):
-        signal = None
-        LONG = 1
-        SHORT = -1
-
-        if self.fast_ema[-2] < self.slow_ema[-2] and self.fast_ema[-1] > self.slow_ema[-1]:
-            signal = LONG
-        elif self.fast_ema[-2] > self.slow_ema[-2] and self.fast_ema[-1] < self.slow_ema[-1]:
-            signal = SHORT
-
-        if signal is not None and self.current_position_side is None and self.cfg.allowed_direction != 0:
+    def validate_signal(self, signal, new_price):
+        if self.current_position_side is None and self.cfg.allowed_direction != 0:
             if self.cfg.allowed_direction != signal:
                 print(f"Skip signal due to only {'LONG' if signal == 1 else 'SHORT'} signals allowed")
-                signal = None
+                return False
 
-        if signal is not None and self.current_position_side is not None:
+        if self.current_position_side is not None:
             if signal != self.current_position_side:
                 print(f"Opposite direction signal while aready in {'LONG' if self.current_position_side == 1 else 'SHORT'} position")
-                signal = None
+                return False
 
             if self.bars_delay > 0:
                 print(f"Skip signal due to awaited delay {self.bars_delay} more bars to wait")
-                signal = None
+                return False
 
             if self.mart_current_steps == self.cfg.max_mart_depth+1:
                 print(f"Skip signal due to max mart step reached: {self.cfg.max_mart_depth}")
-                signal = None
+                return False
 
             if (self.current_position_side == LONG and new_price < self.avg_price) or \
                 self.current_position_side == SHORT and new_price > self.avg_price:
                 price_perc_delta = abs(self.avg_price - new_price) / self.avg_price
                 if price_perc_delta < self.cfg.min_delta_perc:
                     print(f"Skip signal due to perc delta less then min allowed: {price_perc_delta} < {self.cfg.min_delta_perc}")
-                    signal = None
+                    return False
             else:
                 print("Skip signal due to new price goes wrong direction")
-                signal = None
+                return False
+        
+        return True
+
+    def check_signal(self):
+        signal = None
+
+        if self.fast_ema[-2] < self.slow_ema[-2] and self.fast_ema[-1] > self.slow_ema[-1]:
+            signal = LONG
+        elif self.fast_ema[-2] > self.slow_ema[-2] and self.fast_ema[-1] < self.slow_ema[-1]:
+            signal = SHORT
 
         return signal

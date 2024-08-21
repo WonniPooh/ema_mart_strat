@@ -350,13 +350,24 @@ class MainWindow(QMainWindow):
         try:
             tp_val = float(self.ui.tp_input.text())
         except Exception as e:
-            self.popError(f"Не мKLINES_INTERVAL_DURATIONогу считать значение ТП: " + str(e))
+            self.popError(f"Не могу считать значение ТП: " + str(e))
+            return
+        
+        try:
+            ema_tp = self.ui.ema_cross_tp_input.text()
+            if ema_tp != "":
+                ema_cross_tp_val  = float(ema_tp)
+            else:
+                ema_cross_tp_val = None
+        except Exception as e:
+            self.popError(f"Не могу считать значение EMA_CROSS_TP: " + str(e))
             return
 
         cfg.symbol = symbol
         cfg.leverage = leverage
         cfg.sl = sl_val
         cfg.tp = tp_val
+        cfg.ema_cross_tp = ema_cross_tp_val
         cfg.ema_slow = ema_slow
         cfg.ema_fast = ema_fast
         cfg.pause_bars = pause_bars
@@ -402,6 +413,8 @@ class MainWindow(QMainWindow):
             self.ui.allowed_direction_input.setCurrentIndex(2)
         self.ui.tp_input.setText(str(cfg.tp))
         self.ui.sl_input.setText(str(cfg.sl))
+        if cfg.ema_cross_tp is not None:
+            self.ui.ema_cross_tp_input.setText(str(cfg.ema_cross_tp))
 
         self.ui.slow_ema_period_input.setText(str(cfg.ema_slow))
         self.ui.fast_ema_period_input.setText(str(cfg.ema_fast))
@@ -500,6 +513,7 @@ class MainWindow(QMainWindow):
 
         self.ui.sl_input.clear()
         self.ui.tp_input.clear()
+        self.ui.ema_cross_tp_input.clear()
         self.ui.deal_deposit_input.clear()
 
         self.ui.slow_ema_period_input.clear()
