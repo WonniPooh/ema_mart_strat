@@ -412,7 +412,10 @@ class MainWindow(QMainWindow):
         else:
             self.ui.allowed_direction_input.setCurrentIndex(2)
         self.ui.tp_input.setText(str(cfg.tp))
-        self.ui.sl_input.setText(str(cfg.sl))
+        if cfg.sl is not None:
+            self.ui.sl_input.setText(str(cfg.sl))
+        else:
+            self.ui.sl_input.setText("")
         if cfg.ema_cross_tp is not None:
             self.ui.ema_cross_tp_input.setText(str(cfg.ema_cross_tp))
 
