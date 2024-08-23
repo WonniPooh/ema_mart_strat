@@ -234,28 +234,30 @@ class StrategyManager(QObject):
     def update_prices(self):
         counter = 0
         while True:
-            self.symbols_prices = bingx_api.get_current_price()
-            if self.symbols_prices is None:
-                self.symbols_prices = {}
-            for symbol, strategy in self.strategies.items():
-                if not strategy.stopped:
-                    price = self.symbols_prices.get(symbol)
-                    if price is not None:
-                        try:
-                            strategy.process_new_price(float(price))
-                        except Exception as e:
-                            handle_exception(e)
-                    else:
-                        print("No price for {symbol}")
+            try:
+                self.symbols_prices = bingx_api.get_current_price()
+                if self.symbols_prices is None:
+                    self.symbols_prices = {}
+                for symbol, strategy in self.strategies.items():
+                    if not strategy.stopped:
+                        price = self.symbols_prices.get(symbol)
+                        if price is not None:
+                            try:
+                                strategy.process_new_price(float(price))
+                            except Exception as e:
+                                handle_exception(e)
+                        else:
+                            print("No price for {symbol}")
 
-            counter += 1
-            if counter >= 3:
-                self.update_available_funds()
-                counter = 0
-            
-            print(f"Sleeping {10 - time.time()%10 + 0.05} before next price update")
-            time.sleep(10 - time.time()%10 + 0.05)
-            
+                counter += 1
+                if counter >= 3:
+                    self.update_available_funds()
+                    counter = 0
+
+                time.sleep(10 - time.time()%10 + 0.05)
+            except Exception as e:
+                handle_exception(e)
+
     def update_balance(self):
         while True:
             try:

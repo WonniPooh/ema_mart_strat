@@ -111,8 +111,8 @@ class SymbolStrategy(QObject):
 
 #        self.max_leverage = self.manager.get_symbol_max_leverage(self.symbol)
 #        if self.max_leverage < self.cfg.leverage:
-#            print(f"Max allowed leverage is less then configured: {self.max_leverage} < {self.cfg.leverage}")
-#            print("Setting max allowed insted of configured")
+#            log_msg(f"Max allowed leverage is less then configured: {self.max_leverage} < {self.cfg.leverage}")
+#            log_msg("Setting max allowed insted of configured")
 #            bingx_api.set_leverage(self.max_leverage, self.symbol)
 #        else:
         try:
@@ -162,7 +162,7 @@ class SymbolStrategy(QObject):
         position_value = float(order_data["data"]["order"]["executedQty"]) * float(order_data["data"]["order"]["avgPrice"])
         total_result = position_value - self.total_position_value if self.current_position_side == 1 else self.total_position_value - position_value
 
-        print(f"Finished deal for {self.symbol}:\n\tSide: {'LONG' if self.current_position_side == 1 else 'SHORT'}\n\t" +
+        log_msg(f"Finished deal for {self.symbol}:\n\tSide: {'LONG' if self.current_position_side == 1 else 'SHORT'}\n\t" +
               f"Avg_price open: {self.avg_price}\n\tAvg_price close: {order_data['data']['order']['avgPrice']}\n\t" +
               f"Commission: {abs(self.commission)}\n\tFinal result: {total_result}")
 
@@ -188,7 +188,7 @@ class SymbolStrategy(QObject):
 
         self.bars_delay = self.cfg.pause_bars
         self.manager.current_open_positions -= 1
-        print("current_open_positions: ",self.manager.current_open_positions)
+        log_msg(f"{self.symbol}: current_open_positions: {self.manager.current_open_positions}")
         self.manager.update_available_funds()
 
         if not self.is_updated:
@@ -226,7 +226,7 @@ class SymbolStrategy(QObject):
 
         if self.current_position_side is not None and self.bars_delay > 0:
             self.bars_delay -= 1
-            print(f"Bars dealy left: {self.bars_delay}")
+            log_msg(f"{self.symbol}: Bars dealy left: {self.bars_delay}")
 
         signal = self.check_signal()
         if signal is None:
@@ -241,10 +241,10 @@ class SymbolStrategy(QObject):
 
             if self.current_position_side == SHORT and ((self.avg_price - new_price) / self.avg_price) > self.cfg.ema_cross_tp / 100:
                 should_close = True
-                position_gain = ((self.avg_price - new_price) / self.avg_price)
+                position_gain = ((new_price - self.avg_price) / self.avg_price)
 
             if should_close:
-                print(f"Closing position: EMA CROSS + position gain {round(position_gain*100, 2)} > min allowed: {self.cfg.ema_cross_tp}")
+                log_msg(f"{self.symbol}: Closing position: EMA CROSS + position gain {round(position_gain*100, 2)} > min allowed: {self.cfg.ema_cross_tp}")
                 order_result = bingx_api.new_market_order(self.symbol, side="SELL" if self.current_position_side == 1 else "BUY",
                                                           quantity=self.total_position_size)
                 self.process_position_closed(order_result)
@@ -259,13 +259,13 @@ class SymbolStrategy(QObject):
         order_quote = order_base * new_price
 
         if available_funds < order_quote:
-            print(f"Skip signal - insufficient funds: need {order_quote}, but only {available_funds} is available")
+            log_msg(f"{self.symbol}: Skip signal - insufficient funds: need {order_quote}, but only {available_funds} is available")
             return
 
         if self.current_position_side is None:
-            print("current_open_positions: ",self.manager.current_open_positions)
+            log_msg(f"{self.symbol}: current_open_positions: {self.manager.current_open_positions}")
             if self.manager.current_open_positions >= self.manager.max_open_positions_allowed:
-                print(f"Skip signal - max open position allowed exceeded")
+                log_msg(f"{self.symbol}: Skip signal - max open position allowed exceeded")
                 return
 
             self.current_position_side = signal
@@ -296,40 +296,40 @@ class SymbolStrategy(QObject):
         self.next_order_size *= (1+(self.cfg.mart_coef / 100))
         self.mart_current_steps += 1
 
-        print("Avg price: ", self.avg_price)
-        print("New Sl price: ", self.sl_price)
-        print("New Tp price: ", self.tp_price)
-        print("Mart steps: ", self.mart_current_steps)
+        log_msg(f"{self.symbol}: Avg price: {self.avg_price}")
+        log_msg(f"{self.symbol}: New Sl price: {self.sl_price}")
+        log_msg(f"{self.symbol}: New Tp price: {self.tp_price}")
+        log_msg(f"{self.symbol}: Mart steps: {self.mart_current_steps}")
 
         self.manager.update_available_funds()
 
     def validate_signal(self, signal, new_price):
         if self.current_position_side is None and self.cfg.allowed_direction != 0:
             if self.cfg.allowed_direction != signal:
-                print(f"Skip signal due to only {'LONG' if signal == 1 else 'SHORT'} signals allowed")
+                log_msg(f"{self.symbol}: Skip signal due to only {'LONG' if signal == 1 else 'SHORT'} signals allowed")
                 return False
 
         if self.current_position_side is not None:
             if signal != self.current_position_side:
-                print(f"Opposite direction signal while aready in {'LONG' if self.current_position_side == 1 else 'SHORT'} position")
+                log_msg(f"{self.symbol}: Opposite direction signal while aready in {'LONG' if self.current_position_side == 1 else 'SHORT'} position")
                 return False
 
             if self.bars_delay > 0:
-                print(f"Skip signal due to awaited delay {self.bars_delay} more bars to wait")
+                log_msg(f"{self.symbol}: Skip signal due to awaited delay {self.bars_delay} more bars to wait")
                 return False
 
             if self.mart_current_steps == self.cfg.max_mart_depth+1:
-                print(f"Skip signal due to max mart step reached: {self.cfg.max_mart_depth}")
+                log_msg(f"Skip signal due to max mart step reached: {self.cfg.max_mart_depth}")
                 return False
 
             if (self.current_position_side == LONG and new_price < self.avg_price) or \
                 self.current_position_side == SHORT and new_price > self.avg_price:
                 price_perc_delta = abs(self.avg_price - new_price) / self.avg_price
                 if price_perc_delta < self.cfg.min_delta_perc:
-                    print(f"Skip signal due to perc delta less then min allowed: {price_perc_delta} < {self.cfg.min_delta_perc}")
+                    log_msg(f"{self.symbol}: Skip signal due to perc delta less then min allowed: {price_perc_delta} < {self.cfg.min_delta_perc}")
                     return False
             else:
-                print("Skip signal due to new price goes wrong direction")
+                log_msg(f"{self.symbol}: Skip signal due to new price goes wrong direction")
                 return False
         
         return True

@@ -211,8 +211,14 @@ class MainWindow(QMainWindow):
             return result
 
         while(True):
-            time.sleep(10)
+            time.sleep(1)
             self.ui.tss_val.setText(get_time_since_start_str())
+            while True:
+                try:
+                    msg = MSG_QUEUE.get_nowait()
+                    self.show_log(msg)
+                except:
+                    break
 
     def loadConfig(self):
         is_running = False

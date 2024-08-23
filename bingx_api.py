@@ -2,7 +2,7 @@ import time
 import requests
 import json
 import hmac
-from common import handle_exception
+from common import handle_exception, log_msg
 from hashlib import sha256
 
 APIURL = "https://open-api.bingx.com"
@@ -42,13 +42,13 @@ def get_available_futures_contracts():
     result = send_request(method, path)
     jsoned_result = json.loads(result)
     if jsoned_result["code"] != 0:
-        print(f"Error appeared during 'get_current_price': {jsoned_result}")
+        log_msg(f"Error appeared during 'get_current_price': {jsoned_result}")
 
     data = jsoned_result.get("data")
     parsed = {}
     for pair_data in data:
         if pair_data["maxLongLeverage"] != pair_data["maxShortLeverage"]:
-            print(f"Skip symbol {pair_data['symbol']} due to Long MAxLeverage != Short MaxLeverage")
+            log_msg(f"Skip symbol {pair_data['symbol']} due to Long MAxLeverage != Short MaxLeverage")
             continue
 
         parsed[pair_data["symbol"]] = pair_data
@@ -65,7 +65,7 @@ def get_current_price(symbol=None):
     result = send_request(method, path, params)
     jsoned_result = json.loads(result)
     if jsoned_result["code"] != 0:
-        print(f"Error appeared during 'get_current_price': {jsoned_result}")
+        log_msg(f"Error appeared during 'get_current_price': {jsoned_result}")
 
     parsed = {}
     for pair_data in jsoned_result["data"]:
@@ -84,7 +84,7 @@ def get_open_orders(symbol=None):
     result = send_request(method, path, paramsMap)
     jsoned_result = json.loads(result)
     if jsoned_result["code"] != 0:
-        print(f"Error appeared during 'get_open_orders': {jsoned_result}")
+        log_msg(f"Error appeared during 'get_open_orders': {jsoned_result}")
 
     return jsoned_result
 
@@ -96,7 +96,7 @@ def get_account_uid(symbol=None):
     result = send_request(method, path, paramsMap)
     jsoned_result = json.loads(result)
     if jsoned_result["code"] != 0:
-        print(f"Error appeared during 'get_account_uid': {jsoned_result}")
+        log_msg(f"Error appeared during 'get_account_uid': {jsoned_result}")
 
     return jsoned_result
 
@@ -117,7 +117,7 @@ def load_klines(symbol, timeframe, ts_start_ms=None):
     jsoned_result = json.loads(result)
 
     if jsoned_result["code"] != 0:
-        print(f"Error appeared during 'load_klines': {jsoned_result}")
+        log_msg(f"Error appeared during 'load_klines': {jsoned_result}")
         return None
 
     data = jsoned_result["data"]
@@ -155,7 +155,7 @@ def get_balance(): #availableMargin, balance
     result = send_request(method, path)
     jsoned_result = json.loads(result)
     if jsoned_result["code"] != 0:
-       print(f"Error appeared during 'get_balance': {jsoned_result}")
+       log_msg(f"Error appeared during 'get_balance': {jsoned_result}")
 
     return jsoned_result["data"]["balance"]
 
@@ -175,9 +175,8 @@ def set_leverage(leverage, symbol, is_single_side=True):
         paramsMap['side'] = side
         result = send_request(method, path, paramsMap)
         jsoned_result = json.loads(result)
-        print(jsoned_result)
         if jsoned_result["code"] != 0:
-            print(f"Error appeared during 'set_leverage' {side} change: {jsoned_result}")
+            log_msg(f"Error appeared during 'set_leverage' {side} change: {jsoned_result}")
 
 @retry_handle_except
 def change_dual_side(is_dual_side: bool):
@@ -190,9 +189,9 @@ def change_dual_side(is_dual_side: bool):
     result = send_request(method, path, paramsMap)
     jsoned_result = json.loads(result)
     if jsoned_result["code"] != 0:
-       print(f"Error appeared during 'change_dual_side': {jsoned_result}")
+       log_msg(f"Error appeared during 'change_dual_side': {jsoned_result}")
     else:
-        print(f"Dual side position change success: {jsoned_result}")
+        log_msg(f"Dual side position change success: {jsoned_result}")
 
 @retry_handle_except
 def get_order_details(symbol, order_id):
@@ -205,7 +204,7 @@ def get_order_details(symbol, order_id):
    result = send_request(method, path, paramsMap)
    jsoned_result = json.loads(result)
    if jsoned_result["code"] != 0:
-      print(f"Error appeared during 'get_order_details': {jsoned_result}")
+      log_msg(f"Error appeared during 'get_order_details': {jsoned_result}")
 
    return jsoned_result
 
@@ -224,7 +223,7 @@ def new_market_order(symbol, side, quantity):
    result = send_request(method, path, paramsMap)
    jsoned_result = json.loads(result)
    if jsoned_result["code"] != 0:
-      print(f"Error appeared during 'new_market_order': {jsoned_result}")
+      log_msg(f"Error appeared during 'new_market_order': {jsoned_result}")
 
    return jsoned_result
 
