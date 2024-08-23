@@ -324,7 +324,7 @@ class SymbolStrategy(QObject):
 
             if (self.current_position_side == LONG and new_price < self.avg_price) or \
                 self.current_position_side == SHORT and new_price > self.avg_price:
-                price_perc_delta = abs(self.avg_price - new_price) / self.avg_price
+                price_perc_delta = abs(self.avg_price - new_price) / self.avg_price * 100
                 if price_perc_delta < self.cfg.min_delta_perc:
                     log_msg(f"{self.symbol}: Skip signal due to perc delta less then min allowed: {price_perc_delta} < {self.cfg.min_delta_perc}")
                     return False
