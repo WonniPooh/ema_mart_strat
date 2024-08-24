@@ -1,1 +1,1 @@
-python -Xutf8 main.py
+python -Xutf8 main.pyc
