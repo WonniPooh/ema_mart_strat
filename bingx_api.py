@@ -172,11 +172,19 @@ def set_leverage(leverage, symbol, is_single_side=True):
         arr = ["BOTH"]
 
     for side in arr:
-        paramsMap['side'] = side
-        result = send_request(method, path, paramsMap)
-        jsoned_result = json.loads(result)
-        if jsoned_result["code"] != 0:
-            log_msg(f"Error appeared during 'set_leverage' {side} change: {jsoned_result}")
+        for _ in range(3):
+            paramsMap['side'] = side
+            result = send_request(method, path, paramsMap)
+            jsoned_result = json.loads(result)
+
+            if jsoned_result["code"] == 0:
+                break
+
+            if jsoned_result["code"] == 109400 and "In the Hedge" in jsoned_result["msg"]:
+                change_dual_side(False)
+            else:
+                log_msg(f"Error appeared during 'set_leverage' {side} change: {jsoned_result}")
+                break
 
 @retry_handle_except
 def change_dual_side(is_dual_side: bool):
