@@ -29,9 +29,11 @@ with open(c_path + "/account.json", "w") as file:
 
 with open("mainwindow.py", "r") as file:
 	contents = file.readlines()
-	
+
+initial_uid_str = None
 for i in range(len(contents)):
 	if "self.allowed_uid = " in contents[i]:
+		initial_uid_str = contents[i]
 		str_start = contents[i].split(" = ")[0]
 		contents[i] = f"{str_start} = \"{modified_uid}\"\n"
 
@@ -53,3 +55,11 @@ for filename in dir_files:
 
 shutil.make_archive("compiled_project_archive", 'zip', c_path)
 rmdir(Path(c_path))
+
+for i in range(len(contents)):
+	if "self.allowed_uid = " in contents[i]:
+		initial_uid_str = contents[i]
+		contents[i] = initial_uid_str
+
+with open("mainwindow.py", "w") as file:
+    file.writelines(contents)
