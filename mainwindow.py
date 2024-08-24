@@ -35,6 +35,7 @@ class MainWindow(QMainWindow):
         self.m_thread.start()
 
         self.log_file = open("strat.log", "a")
+        self.allowed_uid = "24942028"
         self.current_balance_color = ""
         self.ts_start = int(time.time())
 
@@ -56,11 +57,10 @@ class MainWindow(QMainWindow):
         self.ui.stop_all_btn.clicked.connect(self.stopStrategies)
         self.deals_report_brief = []
 
-        self.allowed_uid = 24942028
 
     def check_uid(self):
         account_uid = get_account_uid()
-        if account_uid["data"]["uid"] != self.allowed_uid:
+        if account_uid["data"]["uid"] != int("1" + "0"*len(self.allowed_uid)) - int(self.allowed_uid):
             self.popError("UID аккаунта не совпадает с разрешённым! Проверьте что АПИ-ключи от нужного аккаунта")
             return False
         else:
@@ -518,7 +518,7 @@ class MainWindow(QMainWindow):
         self.ui.symbol_input.clear()
         self.ui.leverage_input.clear()
         self.ui.margin_type_input.setCurrentIndex(0)
-        self.ui.direction_input.setCurrentIndex(0)
+        self.ui.allowed_direction_input.setCurrentIndex(0)
 
         self.ui.sl_input.clear()
         self.ui.tp_input.clear()
@@ -532,10 +532,3 @@ class MainWindow(QMainWindow):
         self.ui.pause_bars_num_input.clear()
         self.ui.min_delta_perc_input.clear()
 
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    widget = MainWindow()
-    widget.show()
-#    widget.m_thread.quit()
-    sys.exit(app.exec())

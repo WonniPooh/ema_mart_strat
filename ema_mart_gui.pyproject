@@ -1,3 +1,3 @@
 {
-    "files": ["form.ui","db_connector.py","StrategyManager.py","report_construction.py","requirements.txt","mainwindow.py","SymbolStrategy.py","common.py","bingx_api.py"]
+    "files": ["common.py","StrategyManager.py","requirements.txt","report_construction.py","mainwindow.py","bingx_api.py","SymbolStrategy.py","db_connector.py","form.ui","main.py"]
 }

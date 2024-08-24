@@ -103,6 +103,7 @@ class SymbolStrategy(QObject):
         self.total_position_value = 0
         self.commission = 0
         self.avg_price = 0
+        self.last_order_price = 0
 
         self.tp_price = 0
         self.sl_price = None
@@ -176,6 +177,7 @@ class SymbolStrategy(QObject):
         self.manager.finished_deals.append(deal_report)
         db_new_finished_deal(self.position_id, deal_report)
         self.avg_price = 0
+        self.last_order_price = 0
         self.commission = 0
         self.total_position_size = 0
         self.total_position_value = 0
@@ -282,7 +284,8 @@ class SymbolStrategy(QObject):
         db_new_finished_order(order_data, self.position_id)
 
         self.commission += float(order_data["data"]["order"]["commission"]) #was negative
-        position_value = float(order_data["data"]["order"]["executedQty"]) * float(order_data["data"]["order"]["avgPrice"])
+        self.last_order_price = float(order_data["data"]["order"]["avgPrice"])
+        position_value = float(order_data["data"]["order"]["executedQty"]) * self.last_order_price
         self.total_position_size += abs(float(order_data["data"]["order"]["executedQty"]))
         self.total_position_value += position_value
 
@@ -297,6 +300,7 @@ class SymbolStrategy(QObject):
         self.mart_current_steps += 1
 
         log_msg(f"{self.symbol}: Avg price: {self.avg_price}")
+        log_msg(f"{self.symbol}: Last order price: {self.last_order_price}")
         log_msg(f"{self.symbol}: New Sl price: {self.sl_price}")
         log_msg(f"{self.symbol}: New Tp price: {self.tp_price}")
         log_msg(f"{self.symbol}: Mart steps: {self.mart_current_steps}")
@@ -324,7 +328,7 @@ class SymbolStrategy(QObject):
 
             if (self.current_position_side == LONG and new_price < self.avg_price) or \
                 self.current_position_side == SHORT and new_price > self.avg_price:
-                price_perc_delta = abs(self.avg_price - new_price) / self.avg_price * 100
+                price_perc_delta = abs(self.last_order_price - new_price) / self.last_order_price * 100
                 if price_perc_delta < self.cfg.min_delta_perc:
                     log_msg(f"{self.symbol}: Skip signal due to perc delta less then min allowed: {price_perc_delta} < {self.cfg.min_delta_perc}")
                     return False
