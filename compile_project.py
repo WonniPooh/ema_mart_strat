@@ -44,7 +44,7 @@ shutil.copy("run_bot.bat", c_path + "/" + "run_bot.bat")
 
 dir_files = os.listdir()
 for filename in dir_files:
-	if ".py" in filename:
+	if ".py" in filename and "compile" not in filename:
 		shutil.copy(filename, c_path + "/" + filename)
 
 compileall.compile_dir('./compiled_project', legacy=True, force=True)
@@ -58,7 +58,6 @@ rmdir(Path(c_path))
 
 for i in range(len(contents)):
 	if "self.allowed_uid = " in contents[i]:
-		initial_uid_str = contents[i]
 		contents[i] = initial_uid_str
 
 with open("mainwindow.py", "w") as file:
