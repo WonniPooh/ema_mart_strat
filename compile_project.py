@@ -41,6 +41,7 @@ with open("mainwindow.py", "w") as file:
     file.writelines(contents)
 
 shutil.copy("run_bot.bat", c_path + "/" + "run_bot.bat")
+shutil.copy("install_bot.bat", c_path + "/" + "install_bot.bat")
 
 dir_files = os.listdir()
 for filename in dir_files:
