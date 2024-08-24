@@ -50,7 +50,7 @@ for filename in dir_files:
 compileall.compile_dir('./compiled_project', legacy=True, force=True)
 
 for filename in dir_files:
-	if ".py" in filename:
+	if ".py" in filename and "compile" not in filename:
 		os.remove(c_path + "/" + filename)
 
 shutil.make_archive("compiled_project_archive", 'zip', c_path)

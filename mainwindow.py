@@ -35,7 +35,7 @@ class MainWindow(QMainWindow):
         self.m_thread.start()
 
         self.log_file = open("strat.log", "a")
-        self.allowed_uid = "24942028"
+        self.allowed_uid = "877"
         self.current_balance_color = ""
         self.ts_start = int(time.time())
 
