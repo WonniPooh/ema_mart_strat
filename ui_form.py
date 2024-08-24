@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1044, 827)
+        MainWindow.resize(1044, 836)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_12 = QGridLayout(self.centralwidget)
@@ -168,7 +168,7 @@ class Ui_MainWindow(object):
         self.configuredSymbolsScrollArea.setWidgetResizable(True)
         self.configuredSymbolsScrollAreaWidget = QWidget()
         self.configuredSymbolsScrollAreaWidget.setObjectName(u"configuredSymbolsScrollAreaWidget")
-        self.configuredSymbolsScrollAreaWidget.setGeometry(QRect(0, 0, 497, 613))
+        self.configuredSymbolsScrollAreaWidget.setGeometry(QRect(0, 0, 497, 622))
         self.verticalLayout = QVBoxLayout(self.configuredSymbolsScrollAreaWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.configuredSymbolsVLayout = QVBoxLayout()
@@ -519,8 +519,8 @@ class Ui_MainWindow(object):
         self.tf_input.setItemText(8, QCoreApplication.translate("MainWindow", u"12h", None))
 
         self.fast_ema_period_input.setText(QCoreApplication.translate("MainWindow", u"9", None))
-        self.max_mart_depth_lbl.setText(QCoreApplication.translate("MainWindow", u"\u041c\u0430\u043a\u0441\n"
-"\u0413\u043b\u0443\u0431\u0438\u043d\u0430 \u041c\u0430\u0440\u0442\u0438\u043d\u0433\u0435\u0439\u043b", None))
+        self.max_mart_depth_lbl.setText(QCoreApplication.translate("MainWindow", u"\u041a\u043e\u043b-\u0432\u043e\n"
+"\u0414\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0445 \u041e\u0440\u0434\u0435\u0440\u043e\u0432", None))
         self.leverage_input.setText(QCoreApplication.translate("MainWindow", u"1", None))
         self.deal_deposit_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0443\u043c\u043c\u0430 1 \u0412\u0445\u043e\u0434\u0430\n"
 "(\u0431\u0435\u0437 \u0443\u0447\u0451\u0442\u0430 \u043f\u043b\u0435\u0447\u0430)", None))
