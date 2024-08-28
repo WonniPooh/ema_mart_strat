@@ -102,12 +102,20 @@ class MainWindow(QMainWindow):
             event.accept()
 
     def show_log(self, text):
-        now = datetime.now()
-        date_time = now.strftime("%d/%m, %H:%M:%S")
-        final_text = date_time + " " + text + "\n"
-        self.ui.logger_field.append(final_text)
-        self.log_file.write(final_text)
-        self.log_file.flush()
+        try:
+            now = datetime.now()
+            date_time = now.strftime("%d/%m, %H:%M:%S")
+            final_text = date_time + " " + text + "\n"
+            self.ui.logger_field.append(final_text)
+            self.log_file.write(final_text)
+            self.log_file.flush()
+        except Exception as e:
+            handle_exception(e)
+            try:
+                self.log_file.close()
+                self.log_file = open("strat.log", "a")
+            except Exception as e:
+                handle_exception(e)
 
     def refreshFinishedDeals(self):
         if len(self.strat_manager.finished_deals) > 0:
