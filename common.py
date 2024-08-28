@@ -2,14 +2,17 @@
 import sys, os
 import importlib.util
 import queue
+from datetime import datetime
 
 LOG_FILE = "exceptions.log"
 
 def handle_exception(fired_exception, comment=""):
     try:
+        now = datetime.now()
+        date_time = now.strftime("%d/%m, %H:%M:%S")
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        log_message = f"{fname}:{exc_tb.tb_lineno} - {exc_type}:{fired_exception}"
+        log_message = f"{date_time} {fname}:{exc_tb.tb_lineno} - {exc_type}:{fired_exception}"
         if len(comment) > 0:
             log_message += f"\nComment:{comment}"
         print(log_message)
