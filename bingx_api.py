@@ -13,6 +13,7 @@ FUTURES_SET_LEVERAGE_URL = "/openApi/swap/v2/trade/leverage"
 
 APIKEY = ""
 SECRETKEY = ""
+ACCOUNT_STATE = 0
 
 with open("account.json") as f:
     keys = f.read()
@@ -64,9 +65,11 @@ def get_current_price(symbol=None):
         params = {"symbol": symbol}
     result = send_request(method, path, params)
     jsoned_result = json.loads(result)
+    
     if jsoned_result["code"] != 0:
         log_msg(f"Error appeared during 'get_current_price': {jsoned_result}")
-
+        return {}
+    
     parsed = {}
     for pair_data in jsoned_result["data"]:
         parsed[pair_data["symbol"]] = float(pair_data["price"])
@@ -155,8 +158,9 @@ def get_balance(): #availableMargin, balance
     result = send_request(method, path)
     jsoned_result = json.loads(result)
     if jsoned_result["code"] != 0:
-       log_msg(f"Error appeared during 'get_balance': {jsoned_result}")
-
+        log_msg(f"Error appeared during 'get_balance': {jsoned_result}")
+        return None
+    
     return jsoned_result["data"]["balance"]
 
 @retry_handle_except
@@ -181,10 +185,24 @@ def set_leverage(leverage, symbol, is_single_side=True):
                 break
 
             if jsoned_result["code"] == 109400 and "In the Hedge" in jsoned_result["msg"]:
-                change_dual_side(False)
+                arr = ["LONG", "SHORT"]
+                break
             else:
                 log_msg(f"Error appeared during 'set_leverage' {side} change: {jsoned_result}")
                 break
+
+@retry_handle_except
+def is_dual_side_hedge():
+    path = '/openApi/swap/v1/positionSide/dual'
+    method = "GET"
+
+    result = send_request(method, path)
+    jsoned_result = json.loads(result)
+    if jsoned_result["code"] != 0:
+        log_msg(f"Error appeared during 'get_dual_side': {jsoned_result}")
+        return None
+    
+    return jsoned_result["data"]["dualSidePosition"] == "true"
 
 @retry_handle_except
 def change_dual_side(is_dual_side: bool):
@@ -197,9 +215,11 @@ def change_dual_side(is_dual_side: bool):
     result = send_request(method, path, paramsMap)
     jsoned_result = json.loads(result)
     if jsoned_result["code"] != 0:
-       log_msg(f"Error appeared during 'change_dual_side': {jsoned_result}")
+        log_msg(f"Error appeared during 'change_dual_side': {jsoned_result}")
+        return jsoned_result["msg"]
     else:
         log_msg(f"Dual side position change success: {jsoned_result}")
+        return
 
 @retry_handle_except
 def get_order_details(symbol, order_id):
@@ -217,23 +237,34 @@ def get_order_details(symbol, order_id):
    return jsoned_result
 
 @retry_handle_except
-def new_market_order(symbol, side, quantity):
-   path = '/openApi/swap/v2/trade/order'
-   method = "POST"
-   paramsMap = {
-       "symbol": symbol.upper(),
-       "side": side.upper(),
-       "positionSide": "BOTH",
-       "type": "MARKET",
-       "quantity": quantity #coins amount
-   }
+def new_market_order(symbol, side, position, quantity):
+    path = '/openApi/swap/v2/trade/order'
+    method = "POST"
 
-   result = send_request(method, path, paramsMap)
-   jsoned_result = json.loads(result)
-   if jsoned_result["code"] != 0:
-      log_msg(f"Error appeared during 'new_market_order': {jsoned_result}")
+    if ACCOUNT_STATE == 0:
+        pos_side = "BOTH"
+    else:
+        pos_side = "LONG" if position == 1 else "SHORT"
 
-   return jsoned_result
+
+    paramsMap = {
+        "symbol": symbol.upper(),
+        "side": side.upper(),
+        "positionSide": pos_side,
+        "type": "MARKET",
+        "quantity": quantity #coins amount
+    }
+
+    result = send_request(method, path, paramsMap)
+    jsoned_result = json.loads(result)
+    if jsoned_result["code"] != 0:
+        log_msg(f"Error appeared during 'new_market_order': {jsoned_result}")
+        return None
+
+    return jsoned_result
+
+
+is_dual_side_hedge()
 
 #def new_limit_order(symbol, side, quantity, price):
 #   path = '/openApi/swap/v2/trade/order'

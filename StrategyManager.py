@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import json
 from db_connector import db_update_balance, construct_db
-from PySide6.QtCore import QObject, QThread, QTimer
+from PySide6.QtCore import QObject
 from SymbolStrategy import *
 from threading import Thread
 import bingx_api
@@ -79,13 +79,6 @@ class StrategyCfg:
 
         return cfg_dump
 
-
-#if we need to cancel, we fire CANCEL + set timer that will cancel signal if no respoce in 5 seconds, and print FAILED NEW SIGNAL msg
-#if order is cancelled succesfully, we cancel that timer on getting a report, and then just creating new order
-#also we need to setup a separate WS for ordebook, and we need to check and at least log somewhere what is the status - like
-#how far our BUY\SELL changed the market price.
-#also we need to add saving results - should be easy, on parsing new order we just dump it in a file
-
 class StrategyManager(QObject):
     def __init__(self, logger, show_balance):
         super().__init__()
@@ -103,12 +96,12 @@ class StrategyManager(QObject):
 
         self.symbols_prices = {}
         self.symbols_data = bingx_api.get_available_futures_contracts()
-        bingx_api.change_dual_side(False)
         self.update_available_funds()
 
         self.max_open_positions_allowed = MAX_STRAT_IN_POSITION
         self.current_open_positions = 0
         self.finished_deals = []
+        self.last_price_update_ts = 0 #unused atm, in future
 
         construct_db()
 
@@ -117,6 +110,23 @@ class StrategyManager(QObject):
 
         self.upd_balance_thread = Thread(target=self.update_balance, daemon=True)
         self.upd_balance_thread.start()
+
+    def apply_account_mode(self, is_hedge):
+        strat_running = False
+        for _, strat in self.strategies.items():
+            if not strat.stopped:
+                strat_running = True
+                break
+
+        if not strat_running:
+            result = bingx_api.change_dual_side(is_hedge)
+            if result is None:
+                bingx_api.ACCOUNT_STATE = is_hedge
+                return True, None
+            else:
+                return False, result
+        else:
+            return False, None
 
     def add_new_cfg(self, symbol, cfg):
         print(f"add for {symbol}")
@@ -144,7 +154,9 @@ class StrategyManager(QObject):
 
     def update_available_funds(self):
         try:
-            self.funds = bingx_api.get_balance()
+            result = bingx_api.get_balance()
+            if result is not None:
+                self.funds = result
         except Exception as e:
             handle_exception(e)
 
@@ -153,13 +165,12 @@ class StrategyManager(QObject):
             return self.funds["availableMargin"]
         except Exception as e:
             handle_exception(e)
-            return 0
+            return None
 
     def get_quantity_precision(self, symbol):
         return self.symbols_data[symbol]["quantityPrecision"]
 
     def get_symbol_max_leverage(self, symbol):
-        print(symbol, "get_symbol_max_leverage", self.symbols_data[symbol])
         return self.symbols_data[symbol]["maxLongLeverage"]
 
     def start_strategies(self, update_signal_handler=None):
@@ -238,6 +249,8 @@ class StrategyManager(QObject):
                 self.symbols_prices = bingx_api.get_current_price()
                 if self.symbols_prices is None:
                     self.symbols_prices = {}
+                
+                self.last_price_update_ts = time.time()
                 for symbol, strategy in self.strategies.items():
                     if not strategy.stopped:
                         price = self.symbols_prices.get(symbol)
@@ -262,18 +275,19 @@ class StrategyManager(QObject):
         while True:
             try:
                 balance_info = bingx_api.get_balance()
-                balance = float(balance_info["equity"])
+                if balance_info is not None:
+                    balance = float(balance_info["equity"])
 
-                if self.depo_start_val is None:
-                    self.depo_start_val = balance
-                self.depo_current_val = balance
-                self.balance_update_count += 1
+                    if self.depo_start_val is None:
+                        self.depo_start_val = balance
+                    self.depo_current_val = balance
+                    self.balance_update_count += 1
 
-                if self.balance_update_count >= 4:
-                    self.balance_update_count = 0
-                    db_update_balance(balance)
+                    if self.balance_update_count >= 4:
+                        self.balance_update_count = 0
+                        db_update_balance(balance)
 
-                self.show_balance(self.depo_start_val, self.depo_current_val, self.depo_current_val-self.depo_start_val)
+                    self.show_balance(self.depo_start_val, self.depo_current_val, self.depo_current_val-self.depo_start_val)
                 time.sleep(15 - time.time()%15 + 0.05)
             except Exception as e:
                 handle_exception(e)

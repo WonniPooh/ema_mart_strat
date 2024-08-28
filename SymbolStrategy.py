@@ -140,7 +140,7 @@ class SymbolStrategy(QObject):
         self.is_updated = False
 
         if self.total_position_value != 0:
-            order_result = bingx_api.new_market_order(self.symbol, side="SELL" if self.current_position_side == 1 else "BUY",
+            order_result = bingx_api.new_market_order(self.symbol, side="SELL" if self.current_position_side == 1 else "BUY", position=self.current_position_side,
                                                       quantity=self.total_position_size)
             self.process_position_closed(order_result)
 
@@ -201,18 +201,18 @@ class SymbolStrategy(QObject):
     def process_new_price(self, new_price):
         if self.current_position_side == 1: #long
             if self.sl_price is not None and self.sl_price >= new_price:
-                order_result = bingx_api.new_market_order(self.symbol, side="SELL", quantity=self.total_position_size)
+                order_result = bingx_api.new_market_order(self.symbol, side="SELL", position=self.current_position_side, quantity=self.total_position_size)
                 self.process_position_closed(order_result)
             if self.tp_price <= new_price:
-                order_result = bingx_api.new_market_order(self.symbol, side="SELL", quantity=self.total_position_size)
+                order_result = bingx_api.new_market_order(self.symbol, side="SELL", position=self.current_position_side, quantity=self.total_position_size)
                 self.process_position_closed(order_result)
         elif self.current_position_side == -1: #short
             if self.sl_price is not None and self.sl_price <= new_price:
-                order_result = bingx_api.new_market_order(self.symbol, side="BUY", quantity=self.total_position_size)
+                order_result = bingx_api.new_market_order(self.symbol, side="BUY", position=self.current_position_side, quantity=self.total_position_size)
                 self.process_position_closed(order_result)
 
             if self.tp_price >= new_price:
-                order_result = bingx_api.new_market_order(self.symbol, side="BUY", quantity=self.total_position_size)
+                order_result = bingx_api.new_market_order(self.symbol, side="BUY", position=self.current_position_side, quantity=self.total_position_size)
                 self.process_position_closed(order_result)
 
 
@@ -255,7 +255,12 @@ class SymbolStrategy(QObject):
         if not self.validate_signal(signal, new_price):
             return   
 
-        available_funds = float(self.manager.get_available_margin())
+        available_funds = self.manager.get_available_margin()
+        if available_funds is not None:
+            available_funds = float(available_funds)
+        else:
+            log_msg(f"{self.symbol}: Skip signal - error appeared while getting available funds")
+            return
 
         order_base = round(self.next_order_size / new_price, self.manager.get_quantity_precision(self.symbol))
         order_quote = order_base * new_price
@@ -270,14 +275,16 @@ class SymbolStrategy(QObject):
                 log_msg(f"{self.symbol}: Skip signal - max open position allowed exceeded")
                 return
 
+        order_result = bingx_api.new_market_order(self.symbol, side="BUY" if signal > 0 else "SELL", position=self.current_position_side, quantity=order_base)
+        if order_result is None: #some failure
+            log_msg(f"{self.symbol}: Skip signal - some error on new order occured")
+            return
+
+        if self.current_position_side is None:
             self.current_position_side = signal
             self.ts_deal_start = time.time()
             self.manager.current_open_positions += 1
             self.position_id = db_new_deal(self)
-
-        order_result = bingx_api.new_market_order(self.symbol, side="BUY" if signal > 0 else "SELL", quantity=order_base)
-        if order_result is None: #some failure
-            return
 
         order_id = order_result["data"]["order"]["orderId"]
         order_data = bingx_api.get_order_details(self.symbol, order_id)
@@ -310,7 +317,7 @@ class SymbolStrategy(QObject):
     def validate_signal(self, signal, new_price):
         if self.current_position_side is None and self.cfg.allowed_direction != 0:
             if self.cfg.allowed_direction != signal:
-                log_msg(f"{self.symbol}: Skip signal due to only {'LONG' if signal == 1 else 'SHORT'} signals allowed")
+                log_msg(f"{self.symbol}: Skip signal due to only {'SHORT' if signal == 1 else 'LONG'} signals allowed")
                 return False
 
         if self.current_position_side is not None:
@@ -326,8 +333,8 @@ class SymbolStrategy(QObject):
                 log_msg(f"Skip signal due to max mart step reached: {self.cfg.max_mart_depth}")
                 return False
 
-            if (self.current_position_side == LONG and new_price < self.avg_price) or \
-                self.current_position_side == SHORT and new_price > self.avg_price:
+            if (self.current_position_side == LONG and new_price < self.last_order_price) or \
+                self.current_position_side == SHORT and new_price > self.last_order_price:
                 price_perc_delta = abs(self.last_order_price - new_price) / self.last_order_price * 100
                 if price_perc_delta < self.cfg.min_delta_perc:
                     log_msg(f"{self.symbol}: Skip signal due to perc delta less then min allowed: {price_perc_delta} < {self.cfg.min_delta_perc}")

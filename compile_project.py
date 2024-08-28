@@ -43,6 +43,7 @@ with open("mainwindow.py", "w") as file:
 shutil.copy("run_bot.bat", c_path + "/" + "run_bot.bat")
 shutil.copy("install_bot.bat", c_path + "/" + "install_bot.bat")
 shutil.copy("requirements.txt", c_path + "/" + "requirements.txt")
+shutil.copy("python-3.12.5-amd64.exe", c_path + "/" + "python-3.12.5-amd64.exe")
 
 dir_files = os.listdir()
 for filename in dir_files:

@@ -18,7 +18,7 @@ from PySide6.QtGui import QBrush
 from common import *
 from StrategyManager import *
 from report_construction import RunningDealsDataTableModel, FinishedDealsDataTableModel
-from bingx_api import get_account_uid
+from bingx_api import get_account_uid, is_dual_side_hedge
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -52,11 +52,15 @@ class MainWindow(QMainWindow):
         self.ui.refresh_open_deals_btn.clicked.connect(self.refreshOpenDeals)
         self.ui.refresh_finished_deals_btn.clicked.connect(self.refreshFinishedDeals)
         self.ui.max_simultaneous_deals_btn.clicked.connect(self.applyMaxSimulDeals)
+        self.ui.account_mode_btn.clicked.connect(self.applyAccMode)
 
         self.ui.rapid_stop_all_btn.clicked.connect(self.rapidStopStrategies)
         self.ui.stop_all_btn.clicked.connect(self.stopStrategies)
         self.deals_report_brief = []
 
+        is_hedge = is_dual_side_hedge()
+        if is_hedge is not None:
+            self.ui.account_mode_input.setCurrentIndex(int(is_hedge))
 
     def check_uid(self):
         account_uid = get_account_uid()
@@ -65,6 +69,18 @@ class MainWindow(QMainWindow):
             return False
         else:
             return True
+
+    def applyAccMode(self):
+        success, msg = self.strat_manager.apply_account_mode(self.ui.account_mode_input.currentIndex())
+        if not success:
+            if msg is None:
+                self.popError("Нельзя менять при запущенных стратегиях!")
+            else:
+                self.popError(f"Возникла ошибка при попытке изменения: {msg}")
+
+            is_hedge = is_dual_side_hedge()
+            if is_hedge is not None:
+                self.ui.account_mode_input.setCurrentIndex(int(is_hedge))
 
     def applyMaxSimulDeals(self):
         max_simul_deals = self.ui.max_simultaneous_deals_input.text()
@@ -425,6 +441,7 @@ class MainWindow(QMainWindow):
         if cfg.ema_cross_tp is not None:
             self.ui.ema_cross_tp_input.setText(str(cfg.ema_cross_tp))
 
+        self.ui.tf_input.setCurrentIndex(cfg.timeframe_index)
         self.ui.slow_ema_period_input.setText(str(cfg.ema_slow))
         self.ui.fast_ema_period_input.setText(str(cfg.ema_fast))
         self.ui.max_mart_depth_input.setText(str(cfg.max_mart_depth))
