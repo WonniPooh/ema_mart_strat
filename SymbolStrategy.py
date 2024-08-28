@@ -275,7 +275,7 @@ class SymbolStrategy(QObject):
                 log_msg(f"{self.symbol}: Skip signal - max open position allowed exceeded")
                 return
 
-        order_result = bingx_api.new_market_order(self.symbol, side="BUY" if signal > 0 else "SELL", position=self.current_position_side, quantity=order_base)
+        order_result = bingx_api.new_market_order(self.symbol, side="BUY" if signal > 0 else "SELL", position=signal, quantity=order_base)
         if order_result is None: #some failure
             log_msg(f"{self.symbol}: Skip signal - some error on new order occured")
             return
