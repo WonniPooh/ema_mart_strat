@@ -251,15 +251,15 @@ class SymbolStrategy(QObject):
             position_gain = 0
             if self.current_position_side == LONG and ((new_price - self.avg_price) / self.avg_price) > self.cfg.ema_cross_tp / 100:
                 should_close = True
-                position_gain = ((self.avg_price - new_price) / self.avg_price)
+                position_gain = ((new_price - self.avg_price) / self.avg_price)
 
             if self.current_position_side == SHORT and ((self.avg_price - new_price) / self.avg_price) > self.cfg.ema_cross_tp / 100:
                 should_close = True
-                position_gain = ((new_price - self.avg_price) / self.avg_price)
+                position_gain = ((self.avg_price - new_price) / self.avg_price)
 
             if should_close:
                 log_msg(f"{self.symbol}: Closing position: EMA CROSS + position gain {round(position_gain*100, 2)} > min allowed: {self.cfg.ema_cross_tp}")
-                order_result = bingx_api.new_market_order(self.symbol, side="SELL" if self.current_position_side == 1 else "BUY",
+                order_result = bingx_api.new_market_order(self.symbol, side="SELL" if self.current_position_side == 1 else "BUY", position=self.current_position_side,
                                                           quantity=self.total_position_size)
                 self.process_position_closed(order_result)
                 return
