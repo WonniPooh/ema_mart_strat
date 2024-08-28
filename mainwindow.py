@@ -18,7 +18,7 @@ from PySide6.QtGui import QBrush
 from common import *
 from StrategyManager import *
 from report_construction import RunningDealsDataTableModel, FinishedDealsDataTableModel
-from bingx_api import get_account_uid, is_dual_side_hedge
+import bingx_api
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -35,7 +35,7 @@ class MainWindow(QMainWindow):
         self.m_thread.start()
 
         self.log_file = open("strat.log", "a")
-        self.allowed_uid = "877"
+        self.allowed_uid = "75057972"
         self.current_balance_color = ""
         self.ts_start = int(time.time())
 
@@ -58,12 +58,13 @@ class MainWindow(QMainWindow):
         self.ui.stop_all_btn.clicked.connect(self.stopStrategies)
         self.deals_report_brief = []
 
-        is_hedge = is_dual_side_hedge()
+        is_hedge = bingx_api.is_dual_side_hedge()
         if is_hedge is not None:
             self.ui.account_mode_input.setCurrentIndex(int(is_hedge))
+            bingx_api.ACCOUNT_STATE = int(is_hedge)
 
     def check_uid(self):
-        account_uid = get_account_uid()
+        account_uid = bingx_api.get_account_uid()
         if account_uid["data"]["uid"] != int("1" + "0"*len(self.allowed_uid)) - int(self.allowed_uid):
             self.popError("UID аккаунта не совпадает с разрешённым! Проверьте что АПИ-ключи от нужного аккаунта")
             return False

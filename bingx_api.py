@@ -13,7 +13,7 @@ FUTURES_SET_LEVERAGE_URL = "/openApi/swap/v2/trade/leverage"
 
 APIKEY = ""
 SECRETKEY = ""
-ACCOUNT_STATE = 0
+ACCOUNT_STATE = None
 
 with open("account.json") as f:
     keys = f.read()
@@ -201,8 +201,44 @@ def is_dual_side_hedge():
     if jsoned_result["code"] != 0:
         log_msg(f"Error appeared during 'get_dual_side': {jsoned_result}")
         return None
-    
+
     return jsoned_result["data"]["dualSidePosition"] == "true"
+
+@retry_handle_except
+def get_current_margin_type(symbol):
+    path = '/openApi/swap/v2/trade/marginType'
+    method = "GET"
+    paramsMap = {
+        "symbol": symbol.upper()
+    }
+
+    result = send_request(method, path, paramsMap)
+    jsoned_result = json.loads(result)
+    print(jsoned_result)
+    if jsoned_result["code"] != 0:
+        log_msg(f"Error appeared during 'get_current_margin_type': {jsoned_result}")
+        return None
+    else:
+        return jsoned_result["data"]["marginType"]
+
+@retry_handle_except
+def change_margin_type(symbol, margin_type_cross: bool):
+    path = '/openApi/swap/v2/trade/marginType'
+    method = "POST"
+    paramsMap = {
+        "symbol": symbol.upper(),
+        "marginType": "CROSSED" if margin_type_cross else "ISOLATED"
+    }
+
+    result = send_request(method, path, paramsMap)
+    jsoned_result = json.loads(result)
+
+    if jsoned_result["code"] != 0:
+        log_msg(f"Error appeared during 'change_margin_type': {jsoned_result}")
+        return jsoned_result["msg"]
+    else:
+        log_msg(f"Margin type succesfully changed: {jsoned_result}")
+        return None
 
 @retry_handle_except
 def change_dual_side(is_dual_side: bool):
@@ -240,6 +276,15 @@ def get_order_details(symbol, order_id):
 def new_market_order(symbol, side, position, quantity):
     path = '/openApi/swap/v2/trade/order'
     method = "POST"
+    global ACCOUNT_STATE
+
+    if ACCOUNT_STATE is None:
+        result = is_dual_side_hedge()
+        if result is not None:
+            ACCOUNT_STATE = int(result)
+        else:
+            log_msg(f"Error appeared during 'new_market_order': ACCOUNT_STATE (Hedge|Single)")
+            return None
 
     if ACCOUNT_STATE == 0:
         pos_side = "BOTH"
@@ -263,8 +308,6 @@ def new_market_order(symbol, side, position, quantity):
 
     return jsoned_result
 
-
-is_dual_side_hedge()
 
 #def new_limit_order(symbol, side, quantity, price):
 #   path = '/openApi/swap/v2/trade/order'

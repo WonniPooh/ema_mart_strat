@@ -27,7 +27,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_general">
        <attribute name="title">
@@ -222,12 +222,12 @@ color:  rgb(0, 0, 0);</string>
            <widget class="QComboBox" name="margin_type_input">
             <item>
              <property name="text">
-              <string>Изолейт</string>
+              <string>ISOLATED</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>Кросс</string>
+              <string>CROSSED</string>
              </property>
             </item>
            </widget>

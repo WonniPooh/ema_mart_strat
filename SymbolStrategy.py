@@ -125,6 +125,18 @@ class SymbolStrategy(QObject):
     def start_strategy(self):
         klines = bingx_api.load_klines(self.symbol, self.cfg.timeframe)
         prices_arr = []
+        current_margin_type = bingx_api.get_current_margin_type(self.symbol)
+
+        if current_margin_type is None or current_margin_type.lower() != self.cfg.margin_type.lower():
+            log_msg("Failed to get current margin type")
+            result = bingx_api.change_margin_type(self.symbol, self.cfg.margin_type_index)
+            if result is not None:
+                log_msg(f"Failed to change margin type for {self.symbol}")
+            else:
+                log_msg(f"Success changing margin type for {self.symbol}: Margin type {self.cfg.margin_type}")
+        else:
+            log_msg(f"No need to change margin type for {self.symbol}: Margin type already {self.cfg.margin_type}")
+
         for kline in klines:
             prices_arr.append(float(kline['close']))
         self.slow_ema = calculate_ema(prices_arr, self.cfg.ema_slow)

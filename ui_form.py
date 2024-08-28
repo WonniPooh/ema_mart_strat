@@ -466,7 +466,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -495,8 +495,8 @@ class Ui_MainWindow(object):
         self.add_asset_cfg_btn.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0438\u0440\u043e\u0432\u0430\u043d\u044b\u0435 \u0410\u043a\u0442\u0438\u0432\u044b", None))
         self.clean_input_btn.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0432\u0432\u043e\u0434", None))
-        self.margin_type_input.setItemText(0, QCoreApplication.translate("MainWindow", u"\u0418\u0437\u043e\u043b\u0435\u0439\u0442", None))
-        self.margin_type_input.setItemText(1, QCoreApplication.translate("MainWindow", u"\u041a\u0440\u043e\u0441\u0441", None))
+        self.margin_type_input.setItemText(0, QCoreApplication.translate("MainWindow", u"ISOLATED", None))
+        self.margin_type_input.setItemText(1, QCoreApplication.translate("MainWindow", u"CROSSED", None))
 
         self.direction_lbl.setText(QCoreApplication.translate("MainWindow", u"\u041d\u0430\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435", None))
         self.leverage_input.setText(QCoreApplication.translate("MainWindow", u"1", None))
