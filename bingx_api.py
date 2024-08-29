@@ -138,7 +138,7 @@ def send_request(method, path, urlpa={}, payload={}):
     headers = {
         'X-BX-APIKEY': APIKEY,
     }
-    response = requests.request(method, url, headers=headers, data=payload)
+    response = requests.request(method, url, headers=headers, data=payload, timeout=5)
     return response.text
 
 @retry_handle_except

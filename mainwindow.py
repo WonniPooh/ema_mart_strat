@@ -79,7 +79,7 @@ class MainWindow(QMainWindow):
             else:
                 self.popError(f"Возникла ошибка при попытке изменения: {msg}")
 
-            is_hedge = is_dual_side_hedge()
+            is_hedge = bingx_api.is_dual_side_hedge()
             if is_hedge is not None:
                 self.ui.account_mode_input.setCurrentIndex(int(is_hedge))
 
