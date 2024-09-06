@@ -116,11 +116,6 @@ class SymbolStrategy(QObject):
 #            log_msg("Setting max allowed insted of configured")
 #            bingx_api.set_leverage(self.max_leverage, self.symbol)
 #        else:
-        try:
-            bingx_api.set_leverage(self.cfg.leverage, self.symbol)
-        except Exception as e:
-            handle_exception(e)
-
 
     def start_strategy(self):
         klines = bingx_api.load_klines(self.symbol, self.cfg.timeframe)
@@ -136,6 +131,11 @@ class SymbolStrategy(QObject):
                 log_msg(f"Success changing margin type for {self.symbol}: Margin type {self.cfg.margin_type}")
         else:
             log_msg(f"No need to change margin type for {self.symbol}: Margin type already {self.cfg.margin_type}")
+
+        try:
+            bingx_api.set_leverage(self.cfg.leverage, self.symbol)
+        except Exception as e:
+            handle_exception(e)
 
         for kline in klines:
             prices_arr.append(float(kline['close']))
