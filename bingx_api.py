@@ -182,6 +182,7 @@ def set_leverage(leverage, symbol, is_single_side=True):
             jsoned_result = json.loads(result)
 
             if jsoned_result["code"] == 0:
+                log_msg(f"Плечо для {symbol} успешно изменено на {leverage}")
                 break
 
             if jsoned_result["code"] == 109400 and "In the Hedge" in jsoned_result["msg"]:

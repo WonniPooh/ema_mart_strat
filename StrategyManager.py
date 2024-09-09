@@ -80,12 +80,13 @@ class StrategyCfg:
         return cfg_dump
 
 class StrategyManager(QObject):
-    def __init__(self, logger, show_balance):
+    def __init__(self, logger, show_balance, show_btc_price):
         super().__init__()
         self.symbols_cfg = {}
         self.strategies = {}
         self.logger = logger
         self.show_balance = show_balance
+        self.show_btc_price = show_btc_price
 
         self.depo_start_val = None
         self.depo_current_val = None
@@ -99,6 +100,8 @@ class StrategyManager(QObject):
         self.update_available_funds()
 
         self.max_open_positions_allowed = MAX_STRAT_IN_POSITION
+        self.btc_stop_long = None
+        self.btc_stop_short = None
         self.current_open_positions = 0
         self.finished_deals = []
         self.last_price_update_ts = 0 #unused atm, in future
@@ -242,6 +245,12 @@ class StrategyManager(QObject):
         for symbol, strat in self.strategies.items():
             strat.stop_updates()
 
+    def get_symbol_price(self, symbol):
+        if self.symbols_prices is not None:
+            return self.symbols_prices.get(symbol.upper())
+        else:
+            return None
+
     def update_prices(self):
         counter = 0
         while True:
@@ -249,8 +258,26 @@ class StrategyManager(QObject):
                 self.symbols_prices = bingx_api.get_current_price()
                 if self.symbols_prices is None:
                     self.symbols_prices = {}
-                
+
                 self.last_price_update_ts = time.time()
+
+                if self.btc_stop_long is not None or self.btc_stop_short is not None:
+                    btc_price = self.symbols_prices.get("BTC-USDT")
+                    if btc_price is not None:
+                        if self.btc_stop_short is not None and btc_price > self.btc_stop_short:
+                            for symbol, strategy in self.strategies.items():
+                                if not strategy.stopped and strategy.cfg.allowed_direction <= 0:
+                                    self.logger(f"СТОП ШОРТ по цене BTC для {symbol}: текущая цена - {btc_price} > {self.btc_stop_short}")
+                                    strategy.rapid_stop()
+
+                        if self.btc_stop_long is not None and btc_price < self.btc_stop_long:
+                            for symbol, strategy in self.strategies.items():
+                                if not strategy.stopped and strategy.cfg.allowed_direction >= 0:
+                                    self.logger(f"СТОП ЛОНГ по цене BTC для {symbol}: текущая цена - {btc_price} < {self.btc_stop_long}")
+                                    strategy.rapid_stop()
+                    else:
+                        self.logger("Can't check BTC stop: No price for BTC-USDT")
+
                 for symbol, strategy in self.strategies.items():
                     if not strategy.stopped:
                         price = self.symbols_prices.get(symbol)
@@ -260,7 +287,7 @@ class StrategyManager(QObject):
                             except Exception as e:
                                 handle_exception(e)
                         else:
-                            print("No price for {symbol}")
+                            self.logger("No price for {symbol}")
 
                 counter += 1
                 if counter >= 3:

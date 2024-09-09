@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(995, 894)
+        MainWindow.resize(995, 924)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_12 = QGridLayout(self.centralwidget)
@@ -153,25 +153,193 @@ class Ui_MainWindow(object):
         self.tab_settings.setObjectName(u"tab_settings")
         self.gridLayout_3 = QGridLayout(self.tab_settings)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.load_cfg_btn = QPushButton(self.tab_settings)
-        self.load_cfg_btn.setObjectName(u"load_cfg_btn")
+        self.header_3 = QLabel(self.tab_settings)
+        self.header_3.setObjectName(u"header_3")
 
-        self.gridLayout_3.addWidget(self.load_cfg_btn, 0, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.header_3, 5, 1, 1, 1)
 
-        self.add_asset_cfg_btn = QPushButton(self.tab_settings)
-        self.add_asset_cfg_btn.setObjectName(u"add_asset_cfg_btn")
+        self.gridLayout_2 = QGridLayout()
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.tp1_lbl = QLabel(self.tab_settings)
+        self.tp1_lbl.setObjectName(u"tp1_lbl")
 
-        self.gridLayout_3.addWidget(self.add_asset_cfg_btn, 9, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.tp1_lbl, 2, 0, 1, 1)
 
-        self.label_5 = QLabel(self.tab_settings)
-        self.label_5.setObjectName(u"label_5")
+        self.tp_input = QLineEdit(self.tab_settings)
+        self.tp_input.setObjectName(u"tp_input")
 
-        self.gridLayout_3.addWidget(self.label_5, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.tp_input, 2, 1, 1, 1)
+
+        self.sl_input = QLineEdit(self.tab_settings)
+        self.sl_input.setObjectName(u"sl_input")
+
+        self.gridLayout_2.addWidget(self.sl_input, 1, 1, 1, 1)
+
+        self.rp_lbl = QLabel(self.tab_settings)
+        self.rp_lbl.setObjectName(u"rp_lbl")
+        self.rp_lbl.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_2.addWidget(self.rp_lbl, 0, 1, 1, 1)
+
+        self.sl_lbl = QLabel(self.tab_settings)
+        self.sl_lbl.setObjectName(u"sl_lbl")
+
+        self.gridLayout_2.addWidget(self.sl_lbl, 1, 0, 1, 1)
+
+        self.ema_cross_close_lbl = QLabel(self.tab_settings)
+        self.ema_cross_close_lbl.setObjectName(u"ema_cross_close_lbl")
+
+        self.gridLayout_2.addWidget(self.ema_cross_close_lbl, 3, 0, 1, 1)
+
+        self.ema_cross_tp_input = QLineEdit(self.tab_settings)
+        self.ema_cross_tp_input.setObjectName(u"ema_cross_tp_input")
+
+        self.gridLayout_2.addWidget(self.ema_cross_tp_input, 3, 1, 1, 1)
+
+        self.gridLayout_2.setColumnStretch(0, 1)
+        self.gridLayout_2.setColumnStretch(1, 2)
+
+        self.gridLayout_3.addLayout(self.gridLayout_2, 9, 1, 1, 1)
+
+        self.gridLayout_6 = QGridLayout()
+        self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.gridLayout_6.setContentsMargins(-1, 0, -1, -1)
+        self.btc_stop_short_input = QLineEdit(self.tab_settings)
+        self.btc_stop_short_input.setObjectName(u"btc_stop_short_input")
+
+        self.gridLayout_6.addWidget(self.btc_stop_short_input, 3, 1, 1, 1)
+
+        self.label_3 = QLabel(self.tab_settings)
+        self.label_3.setObjectName(u"label_3")
+
+        self.gridLayout_6.addWidget(self.label_3, 3, 0, 1, 1)
+
+        self.account_mode_lbl = QLabel(self.tab_settings)
+        self.account_mode_lbl.setObjectName(u"account_mode_lbl")
+
+        self.gridLayout_6.addWidget(self.account_mode_lbl, 1, 0, 1, 1)
+
+        self.btc_stop_long_input = QLineEdit(self.tab_settings)
+        self.btc_stop_long_input.setObjectName(u"btc_stop_long_input")
+
+        self.gridLayout_6.addWidget(self.btc_stop_long_input, 2, 1, 1, 1)
+
+        self.max_simultaneous_deals_lbl = QLabel(self.tab_settings)
+        self.max_simultaneous_deals_lbl.setObjectName(u"max_simultaneous_deals_lbl")
+
+        self.gridLayout_6.addWidget(self.max_simultaneous_deals_lbl, 0, 0, 1, 1)
+
+        self.btc_stop_long_btn = QPushButton(self.tab_settings)
+        self.btc_stop_long_btn.setObjectName(u"btc_stop_long_btn")
+
+        self.gridLayout_6.addWidget(self.btc_stop_long_btn, 2, 2, 1, 1)
+
+        self.account_mode_input = QComboBox(self.tab_settings)
+        self.account_mode_input.addItem("")
+        self.account_mode_input.addItem("")
+        self.account_mode_input.setObjectName(u"account_mode_input")
+
+        self.gridLayout_6.addWidget(self.account_mode_input, 1, 1, 1, 1)
+
+        self.max_simultaneous_deals_btn = QPushButton(self.tab_settings)
+        self.max_simultaneous_deals_btn.setObjectName(u"max_simultaneous_deals_btn")
+
+        self.gridLayout_6.addWidget(self.max_simultaneous_deals_btn, 0, 2, 1, 1)
+
+        self.max_simultaneous_deals_input = QLineEdit(self.tab_settings)
+        self.max_simultaneous_deals_input.setObjectName(u"max_simultaneous_deals_input")
+
+        self.gridLayout_6.addWidget(self.max_simultaneous_deals_input, 0, 1, 1, 1)
+
+        self.label_2 = QLabel(self.tab_settings)
+        self.label_2.setObjectName(u"label_2")
+
+        self.gridLayout_6.addWidget(self.label_2, 2, 0, 1, 1)
+
+        self.btc_stop_short_btn = QPushButton(self.tab_settings)
+        self.btc_stop_short_btn.setObjectName(u"btc_stop_short_btn")
+
+        self.gridLayout_6.addWidget(self.btc_stop_short_btn, 3, 2, 1, 1)
+
+        self.account_mode_btn = QPushButton(self.tab_settings)
+        self.account_mode_btn.setObjectName(u"account_mode_btn")
+
+        self.gridLayout_6.addWidget(self.account_mode_btn, 1, 2, 1, 1)
+
+        self.label_4 = QLabel(self.tab_settings)
+        self.label_4.setObjectName(u"label_4")
+
+        self.gridLayout_6.addWidget(self.label_4, 4, 0, 1, 1)
+
+        self.current_btc_price_lbl = QLabel(self.tab_settings)
+        self.current_btc_price_lbl.setObjectName(u"current_btc_price_lbl")
+
+        self.gridLayout_6.addWidget(self.current_btc_price_lbl, 4, 1, 1, 1)
+
+        self.update_btc_price_btn = QPushButton(self.tab_settings)
+        self.update_btc_price_btn.setObjectName(u"update_btc_price_btn")
+
+        self.gridLayout_6.addWidget(self.update_btc_price_btn, 4, 2, 1, 1)
+
+
+        self.gridLayout_3.addLayout(self.gridLayout_6, 0, 0, 1, 1)
 
         self.clean_input_btn = QPushButton(self.tab_settings)
         self.clean_input_btn.setObjectName(u"clean_input_btn")
 
-        self.gridLayout_3.addWidget(self.clean_input_btn, 10, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.clean_input_btn, 11, 1, 1, 1)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.total_symbols = QLabel(self.tab_settings)
+        self.total_symbols.setObjectName(u"total_symbols")
+
+        self.horizontalLayout_2.addWidget(self.total_symbols)
+
+        self.total_symbols_val = QLabel(self.tab_settings)
+        self.total_symbols_val.setObjectName(u"total_symbols_val")
+
+        self.horizontalLayout_2.addWidget(self.total_symbols_val)
+
+
+        self.gridLayout_3.addLayout(self.horizontalLayout_2, 11, 0, 1, 1)
+
+        self.add_asset_cfg_btn = QPushButton(self.tab_settings)
+        self.add_asset_cfg_btn.setObjectName(u"add_asset_cfg_btn")
+
+        self.gridLayout_3.addWidget(self.add_asset_cfg_btn, 10, 1, 1, 1)
+
+        self.label_5 = QLabel(self.tab_settings)
+        self.label_5.setObjectName(u"label_5")
+
+        self.gridLayout_3.addWidget(self.label_5, 2, 0, 1, 1)
+
+        self.configuredSymbolsScrollArea = QScrollArea(self.tab_settings)
+        self.configuredSymbolsScrollArea.setObjectName(u"configuredSymbolsScrollArea")
+        self.configuredSymbolsScrollArea.setWidgetResizable(True)
+        self.configuredSymbolsScrollAreaWidget = QWidget()
+        self.configuredSymbolsScrollAreaWidget.setObjectName(u"configuredSymbolsScrollAreaWidget")
+        self.configuredSymbolsScrollAreaWidget.setGeometry(QRect(0, 0, 473, 590))
+        self.verticalLayout = QVBoxLayout(self.configuredSymbolsScrollAreaWidget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.configuredSymbolsVLayout = QVBoxLayout()
+        self.configuredSymbolsVLayout.setObjectName(u"configuredSymbolsVLayout")
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.configuredSymbolsVLayout.addItem(self.verticalSpacer)
+
+
+        self.verticalLayout.addLayout(self.configuredSymbolsVLayout)
+
+        self.configuredSymbolsScrollArea.setWidget(self.configuredSymbolsScrollAreaWidget)
+
+        self.gridLayout_3.addWidget(self.configuredSymbolsScrollArea, 5, 0, 6, 1)
+
+        self.header_2 = QLabel(self.tab_settings)
+        self.header_2.setObjectName(u"header_2")
+        self.header_2.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+
+        self.gridLayout_3.addWidget(self.header_2, 8, 1, 1, 1)
 
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
@@ -316,140 +484,23 @@ class Ui_MainWindow(object):
         self.gridLayout.setColumnStretch(0, 3)
         self.gridLayout.setColumnStretch(1, 2)
 
-        self.gridLayout_3.addLayout(self.gridLayout, 6, 1, 1, 1)
+        self.gridLayout_3.addLayout(self.gridLayout, 7, 1, 1, 1)
+
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(-1, 0, -1, -1)
+        self.load_cfg_btn = QPushButton(self.tab_settings)
+        self.load_cfg_btn.setObjectName(u"load_cfg_btn")
+
+        self.verticalLayout_2.addWidget(self.load_cfg_btn)
 
         self.save_cfg_btn = QPushButton(self.tab_settings)
         self.save_cfg_btn.setObjectName(u"save_cfg_btn")
 
-        self.gridLayout_3.addWidget(self.save_cfg_btn, 1, 1, 1, 1)
-
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.total_symbols = QLabel(self.tab_settings)
-        self.total_symbols.setObjectName(u"total_symbols")
-
-        self.horizontalLayout_2.addWidget(self.total_symbols)
-
-        self.total_symbols_val = QLabel(self.tab_settings)
-        self.total_symbols_val.setObjectName(u"total_symbols_val")
-
-        self.horizontalLayout_2.addWidget(self.total_symbols_val)
+        self.verticalLayout_2.addWidget(self.save_cfg_btn)
 
 
-        self.gridLayout_3.addLayout(self.horizontalLayout_2, 10, 0, 1, 1)
-
-        self.header_2 = QLabel(self.tab_settings)
-        self.header_2.setObjectName(u"header_2")
-        self.header_2.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
-
-        self.gridLayout_3.addWidget(self.header_2, 7, 1, 1, 1)
-
-        self.configuredSymbolsScrollArea = QScrollArea(self.tab_settings)
-        self.configuredSymbolsScrollArea.setObjectName(u"configuredSymbolsScrollArea")
-        self.configuredSymbolsScrollArea.setWidgetResizable(True)
-        self.configuredSymbolsScrollAreaWidget = QWidget()
-        self.configuredSymbolsScrollAreaWidget.setObjectName(u"configuredSymbolsScrollAreaWidget")
-        self.configuredSymbolsScrollAreaWidget.setGeometry(QRect(0, 0, 473, 648))
-        self.verticalLayout = QVBoxLayout(self.configuredSymbolsScrollAreaWidget)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.configuredSymbolsVLayout = QVBoxLayout()
-        self.configuredSymbolsVLayout.setObjectName(u"configuredSymbolsVLayout")
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.configuredSymbolsVLayout.addItem(self.verticalSpacer)
-
-
-        self.verticalLayout.addLayout(self.configuredSymbolsVLayout)
-
-        self.configuredSymbolsScrollArea.setWidget(self.configuredSymbolsScrollAreaWidget)
-
-        self.gridLayout_3.addWidget(self.configuredSymbolsScrollArea, 4, 0, 6, 1)
-
-        self.header_3 = QLabel(self.tab_settings)
-        self.header_3.setObjectName(u"header_3")
-
-        self.gridLayout_3.addWidget(self.header_3, 4, 1, 1, 1)
-
-        self.gridLayout_2 = QGridLayout()
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.tp1_lbl = QLabel(self.tab_settings)
-        self.tp1_lbl.setObjectName(u"tp1_lbl")
-
-        self.gridLayout_2.addWidget(self.tp1_lbl, 2, 0, 1, 1)
-
-        self.tp_input = QLineEdit(self.tab_settings)
-        self.tp_input.setObjectName(u"tp_input")
-
-        self.gridLayout_2.addWidget(self.tp_input, 2, 1, 1, 1)
-
-        self.sl_input = QLineEdit(self.tab_settings)
-        self.sl_input.setObjectName(u"sl_input")
-
-        self.gridLayout_2.addWidget(self.sl_input, 1, 1, 1, 1)
-
-        self.rp_lbl = QLabel(self.tab_settings)
-        self.rp_lbl.setObjectName(u"rp_lbl")
-        self.rp_lbl.setAlignment(Qt.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.rp_lbl, 0, 1, 1, 1)
-
-        self.sl_lbl = QLabel(self.tab_settings)
-        self.sl_lbl.setObjectName(u"sl_lbl")
-
-        self.gridLayout_2.addWidget(self.sl_lbl, 1, 0, 1, 1)
-
-        self.ema_cross_close_lbl = QLabel(self.tab_settings)
-        self.ema_cross_close_lbl.setObjectName(u"ema_cross_close_lbl")
-
-        self.gridLayout_2.addWidget(self.ema_cross_close_lbl, 3, 0, 1, 1)
-
-        self.ema_cross_tp_input = QLineEdit(self.tab_settings)
-        self.ema_cross_tp_input.setObjectName(u"ema_cross_tp_input")
-
-        self.gridLayout_2.addWidget(self.ema_cross_tp_input, 3, 1, 1, 1)
-
-        self.gridLayout_2.setColumnStretch(0, 1)
-        self.gridLayout_2.setColumnStretch(1, 2)
-
-        self.gridLayout_3.addLayout(self.gridLayout_2, 8, 1, 1, 1)
-
-        self.gridLayout_6 = QGridLayout()
-        self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.gridLayout_6.setContentsMargins(-1, 0, -1, -1)
-        self.max_simultaneous_deals_btn = QPushButton(self.tab_settings)
-        self.max_simultaneous_deals_btn.setObjectName(u"max_simultaneous_deals_btn")
-
-        self.gridLayout_6.addWidget(self.max_simultaneous_deals_btn, 0, 2, 1, 1)
-
-        self.max_simultaneous_deals_lbl = QLabel(self.tab_settings)
-        self.max_simultaneous_deals_lbl.setObjectName(u"max_simultaneous_deals_lbl")
-
-        self.gridLayout_6.addWidget(self.max_simultaneous_deals_lbl, 0, 0, 1, 1)
-
-        self.account_mode_input = QComboBox(self.tab_settings)
-        self.account_mode_input.addItem("")
-        self.account_mode_input.addItem("")
-        self.account_mode_input.setObjectName(u"account_mode_input")
-
-        self.gridLayout_6.addWidget(self.account_mode_input, 1, 1, 1, 1)
-
-        self.max_simultaneous_deals_input = QLineEdit(self.tab_settings)
-        self.max_simultaneous_deals_input.setObjectName(u"max_simultaneous_deals_input")
-
-        self.gridLayout_6.addWidget(self.max_simultaneous_deals_input, 0, 1, 1, 1)
-
-        self.account_mode_lbl = QLabel(self.tab_settings)
-        self.account_mode_lbl.setObjectName(u"account_mode_lbl")
-
-        self.gridLayout_6.addWidget(self.account_mode_lbl, 1, 0, 1, 1)
-
-        self.account_mode_btn = QPushButton(self.tab_settings)
-        self.account_mode_btn.setObjectName(u"account_mode_btn")
-
-        self.gridLayout_6.addWidget(self.account_mode_btn, 1, 2, 1, 1)
-
-
-        self.gridLayout_3.addLayout(self.gridLayout_6, 0, 0, 1, 1)
+        self.gridLayout_3.addLayout(self.verticalLayout_2, 0, 1, 1, 1)
 
         self.tabWidget.addTab(self.tab_settings, "")
 
@@ -491,10 +542,38 @@ class Ui_MainWindow(object):
         self.finished_deals_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043d\u044b\u0435 \u0441\u0434\u0435\u043b\u043a\u0438", None))
         self.start_all_btn.setText(QCoreApplication.translate("MainWindow", u"Start All", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_general), QCoreApplication.translate("MainWindow", u"\u041e\u0431\u0449\u0430\u044f \u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430", None))
-        self.load_cfg_btn.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044e", None))
+        self.header_3.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u0435\u043c\u0435\u0442\u0440\u044b \u0432\u0445\u043e\u0434\u0430 \u0432 \u0441\u0434\u0435\u043b\u043a\u0443:", None))
+        self.tp1_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0422\u041f", None))
+        self.rp_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435 (%)", None))
+        self.sl_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0442\u043e\u043f", None))
+        self.ema_cross_close_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0412\u044b\u0445\u043e\u0434 EMA CROSS", None))
+        self.ema_cross_tp_input.setInputMask("")
+        self.ema_cross_tp_input.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u041c\u0438\u043d. % \u0434\u043b\u044f \u043e\u0442\u0440\u0430\u0431\u043e\u0442\u043a\u0438", None))
+        self.btc_stop_short_input.setPlaceholderText(QCoreApplication.translate("MainWindow", u"BTC \u0440\u0430\u0441\u0442\u0451\u0442", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0442\u043e\u043f \u0448\u043e\u0440\u0442 \u043f\u043e BTC ", None))
+        self.account_mode_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0436\u0438\u043c \u0440\u0430\u0431\u043e\u0442\u044b", None))
+        self.btc_stop_long_input.setInputMask("")
+        self.btc_stop_long_input.setText("")
+        self.btc_stop_long_input.setPlaceholderText(QCoreApplication.translate("MainWindow", u"BTC \u043f\u0430\u0434\u0430\u0435\u0442", None))
+        self.max_simultaneous_deals_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0434\u0435\u043b\u043e\u043a \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e (\u043c\u0430\u043a\u0441 10)", None))
+        self.btc_stop_long_btn.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
+        self.account_mode_input.setItemText(0, QCoreApplication.translate("MainWindow", u"\u041e\u0434\u043d\u043e\u0441\u0442\u043e\u0440\u043e\u043d\u043d\u0438\u0439", None))
+        self.account_mode_input.setItemText(1, QCoreApplication.translate("MainWindow", u"\u0425\u044d\u0434\u0436", None))
+
+        self.max_simultaneous_deals_btn.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
+        self.max_simultaneous_deals_input.setText(QCoreApplication.translate("MainWindow", u"5", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0442\u043e\u043f \u043b\u043e\u043d\u0433 \u043f\u043e BTC ", None))
+        self.btc_stop_short_btn.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
+        self.account_mode_btn.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0435\u043a\u0443\u0449\u0430\u044f \u0446\u0435\u043d\u0430 BTC:", None))
+        self.current_btc_price_lbl.setText("")
+        self.update_btc_price_btn.setText(QCoreApplication.translate("MainWindow", u"Update", None))
+        self.clean_input_btn.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0432\u0432\u043e\u0434", None))
+        self.total_symbols.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0441\u0435\u0433\u043e \u043f\u0430\u0440:", None))
+        self.total_symbols_val.setText("")
         self.add_asset_cfg_btn.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0438\u0440\u043e\u0432\u0430\u043d\u044b\u0435 \u0410\u043a\u0442\u0438\u0432\u044b", None))
-        self.clean_input_btn.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0432\u0432\u043e\u0434", None))
+        self.header_2.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u0435\u043c\u0435\u0442\u0440\u044b \u0432\u044b\u0445\u043e\u0434\u0430 \u0438\u0437 \u0441\u0434\u0435\u043b\u043a\u0438", None))
         self.margin_type_input.setItemText(0, QCoreApplication.translate("MainWindow", u"ISOLATED", None))
         self.margin_type_input.setItemText(1, QCoreApplication.translate("MainWindow", u"CROSSED", None))
 
@@ -536,25 +615,8 @@ class Ui_MainWindow(object):
         self.deal_deposit_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0443\u043c\u043c\u0430 1 \u0412\u0445\u043e\u0434\u0430\n"
 "(\u0431\u0435\u0437 \u0443\u0447\u0451\u0442\u0430 \u043f\u043b\u0435\u0447\u0430)", None))
         self.pause_bars_num_input.setText(QCoreApplication.translate("MainWindow", u"5", None))
+        self.load_cfg_btn.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044e", None))
         self.save_cfg_btn.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0442\u0435\u043a\u0443\u0449\u0443\u044e \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044e", None))
-        self.total_symbols.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0441\u0435\u0433\u043e \u043f\u0430\u0440:", None))
-        self.total_symbols_val.setText("")
-        self.header_2.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u0435\u043c\u0435\u0442\u0440\u044b \u0432\u044b\u0445\u043e\u0434\u0430 \u0438\u0437 \u0441\u0434\u0435\u043b\u043a\u0438", None))
-        self.header_3.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u0435\u043c\u0435\u0442\u0440\u044b \u0432\u0445\u043e\u0434\u0430 \u0432 \u0441\u0434\u0435\u043b\u043a\u0443:", None))
-        self.tp1_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0422\u041f", None))
-        self.rp_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435 (%)", None))
-        self.sl_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0442\u043e\u043f", None))
-        self.ema_cross_close_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0412\u044b\u0445\u043e\u0434 EMA CROSS", None))
-        self.ema_cross_tp_input.setInputMask("")
-        self.ema_cross_tp_input.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u041c\u0438\u043d. % \u0434\u043b\u044f \u043e\u0442\u0440\u0430\u0431\u043e\u0442\u043a\u0438", None))
-        self.max_simultaneous_deals_btn.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
-        self.max_simultaneous_deals_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0434\u0435\u043b\u043e\u043a \u043e\u0434\u043d\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e (\u043c\u0430\u043a\u0441 10)", None))
-        self.account_mode_input.setItemText(0, QCoreApplication.translate("MainWindow", u"\u041e\u0434\u043d\u043e\u0441\u0442\u043e\u0440\u043e\u043d\u043d\u0438\u0439", None))
-        self.account_mode_input.setItemText(1, QCoreApplication.translate("MainWindow", u"\u0425\u044d\u0434\u0436", None))
-
-        self.max_simultaneous_deals_input.setText(QCoreApplication.translate("MainWindow", u"5", None))
-        self.account_mode_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0436\u0438\u043c \u0440\u0430\u0431\u043e\u0442\u044b", None))
-        self.account_mode_btn.setText(QCoreApplication.translate("MainWindow", u"Apply", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_settings), QCoreApplication.translate("MainWindow", u"\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435", None))
     # retranslateUi
 

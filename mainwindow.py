@@ -42,7 +42,7 @@ class MainWindow(QMainWindow):
         self.managed_symbols_layouts = {}
         self.managed_symbols_indicators = {}
 
-        self.strat_manager = StrategyManager(self.show_log, self.update_balance_lbl)
+        self.strat_manager = StrategyManager(self.show_log, self.update_balance_lbl, self.update_btc_price_lbl)
 
         self.ui.start_all_btn.clicked.connect(self.startStrategies)
         self.ui.load_cfg_btn.clicked.connect(self.loadConfig)
@@ -53,6 +53,9 @@ class MainWindow(QMainWindow):
         self.ui.refresh_finished_deals_btn.clicked.connect(self.refreshFinishedDeals)
         self.ui.max_simultaneous_deals_btn.clicked.connect(self.applyMaxSimulDeals)
         self.ui.account_mode_btn.clicked.connect(self.applyAccMode)
+        self.ui.btc_stop_long_btn.clicked.connect(self.applyBtcLongStop)
+        self.ui.btc_stop_short_btn.clicked.connect(self.applyBtcShortStop)
+        self.ui.update_btc_price_btn.clicked.connect(self.update_btc_price_lbl)
 
         self.ui.rapid_stop_all_btn.clicked.connect(self.rapidStopStrategies)
         self.ui.stop_all_btn.clicked.connect(self.stopStrategies)
@@ -91,6 +94,33 @@ class MainWindow(QMainWindow):
                 self.strat_manager.set_max_open_positions_allowed(max_simul_deals)
             except Exception as e:
                 self.popError("Не получилось считать ограничение на макс. кол-во одновременных сделок")
+
+    def applyBtcLongStop(self):
+        btc_long_stop_price = self.ui.btc_stop_long_input.text()
+        if btc_long_stop_price != "":
+            try:
+                btc_long_stop_price = int(btc_long_stop_price)
+                self.strat_manager.btc_stop_long = btc_long_stop_price
+                self.show_log(f"Успешно установлен стоп BTC ЛОНГ по цене {btc_long_stop_price}")
+            except Exception as e:
+                self.popError(f"Не получилось считать стоп BTC ЛОНГ: {e}")
+        else:
+            self.strat_manager.btc_stop_long = None
+            self.show_log(f"Успешно снят стоп BTC ЛОНГ")
+
+
+    def applyBtcShortStop(self):
+        btc_short_stop_price = self.ui.btc_stop_short_input.text()
+        if btc_short_stop_price != "":
+            try:
+                btc_short_stop_price = int(btc_short_stop_price)
+                self.strat_manager.btc_stop_short = btc_short_stop_price
+                self.show_log(f"Успешно установлен стоп BTC ШОРТ по цене {btc_short_stop_price}")
+            except Exception as e:
+                self.popError(f"Не получилось считать стоп BTC ШОРТ: {e}")
+        else:
+            self.strat_manager.btc_stop_short = None
+            self.show_log(f"Успешно снят стоп BTC ШОРТ")
 
     def closeEvent(self,event):
         result = QMessageBox.question(self,
@@ -194,6 +224,13 @@ class MainWindow(QMainWindow):
             self.set_indicator_color(indicator, "lightgreen")
         elif status == "DROPPED_UPDATES":
             self.set_indicator_color(indicator, "yellow")
+
+    def update_btc_price_lbl(self, price):
+        price = self.strat_manager.get_symbol_price("BTC-USDT")
+        if price is not None:
+            self.ui.current_btc_price_lbl.setText(str(price))
+        else:
+            self.popError("Не получилось получить цену!")
 
     def update_balance_lbl(self, start, current, delta):
         self.ui.depo_start_val.setText(str(round(start, 1)))
