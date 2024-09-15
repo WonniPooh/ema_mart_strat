@@ -310,7 +310,7 @@ class StrategyManager(QObject):
                             except Exception as e:
                                 handle_exception(e)
                         else:
-                            self.logger("No price for {symbol}")
+                            self.logger(f"No price for {symbol}")
 
                 counter += 1
                 if counter >= 3:
