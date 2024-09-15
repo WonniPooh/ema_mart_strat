@@ -161,12 +161,10 @@ class SymbolStrategy(QObject):
                 if self.filter_fast_ema[i-1] < self.filter_slow_ema[i-1] and self.filter_fast_ema[i] > self.filter_slow_ema[i]:
                     self.filter_current_side = LONG
                     self.filter_cross_price = filter_prices_arr[i]
-                    print(i, self.filter_current_side, self.filter_cross_price)
                     break
                 elif self.filter_fast_ema[i-1] > self.filter_slow_ema[i-1] and self.filter_fast_ema[i] < self.filter_slow_ema[i]:
                     self.filter_current_side = SHORT
                     self.filter_cross_price = filter_prices_arr[i]
-                    print(i, self.filter_current_side, self.filter_cross_price)
                     break
             
         

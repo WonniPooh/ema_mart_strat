@@ -22,7 +22,8 @@ if os.path.exists(c_path):
 
 os.makedirs(c_path)
 
-shutil.copytree("configs", c_path + "/" + "configs", dirs_exist_ok=True)
+shutil.copytree("linux_commands", c_path + "/" + "linux_commands", dirs_exist_ok=True)
+shutil.copytree("windows_commands", c_path + "/" + "windows_commands", dirs_exist_ok=True)
 
 with open(c_path + "/account.json", "w") as file:
     file.write("public key here\nsecret key here")
@@ -40,8 +41,6 @@ for i in range(len(contents)):
 with open("mainwindow.py", "w") as file:
     file.writelines(contents)
 
-shutil.copy("run_bot.bat", c_path + "/" + "run_bot.bat")
-shutil.copy("install_bot.bat", c_path + "/" + "install_bot.bat")
 shutil.copy("requirements.txt", c_path + "/" + "requirements.txt")
 shutil.copy("python-3.12.5-amd64.exe", c_path + "/" + "python-3.12.5-amd64.exe")
 
