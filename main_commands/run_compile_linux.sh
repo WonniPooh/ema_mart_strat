@@ -1,3 +1,5 @@
 #!/bin/bash
 cd "$(dirname "$0")"
-python3 ../compile_project.py
+cd ..
+python3 compile_project.py
+sleep 10

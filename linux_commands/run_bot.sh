@@ -1,3 +1,5 @@
 #!/bin/bash
 cd "$(dirname "$0")"
-python3 ../main.pyc
+cd ..
+python3 main.pyc
+sleep 10
