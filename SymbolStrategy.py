@@ -378,6 +378,7 @@ class SymbolStrategy(QObject):
             
             if self.cfg.filter_max_allowed_perc_delta <= signal*(new_price - self.filter_cross_price) / self.filter_cross_price * 100:
                 log_msg(f"{self.symbol}: Skip {'SHORT' if signal == -1 else 'LONG'} signal due to Filter exceed allowed delta: {self.cfg.filter_max_allowed_perc_delta} < {abs((new_price - self.filter_cross_price) / self.filter_cross_price * 100)}")
+                self.stop_updates()
                 return False
 
         if self.current_position_side is not None:
