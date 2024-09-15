@@ -1,2 +1,3 @@
-python -Xutf8 ../compile_project.py
+cd ..
+python -Xutf8 compile_project.py
 timeout /t 10
