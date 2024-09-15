@@ -93,6 +93,11 @@ class SymbolStrategy(QObject):
         self.slow_ema = []
         self.fast_ema = []
 
+        self.filter_slow_ema = []
+        self.filter_fast_ema = []
+        self.filter_current_side = None
+        self.filter_cross_price = None
+
         self.bars_delay = 0
         self.next_order_size = self.cfg.deal_deposit
 
@@ -108,6 +113,7 @@ class SymbolStrategy(QObject):
         self.tp_price = 0
         self.sl_price = None
         self.last_update_ts = 0
+        self.filter_last_update_ts = 0
         self.ts_deal_start = 0
 
 #        self.max_leverage = self.manager.get_symbol_max_leverage(self.symbol)
@@ -141,6 +147,29 @@ class SymbolStrategy(QObject):
             prices_arr.append(float(kline['close']))
         self.slow_ema = calculate_ema(prices_arr, self.cfg.ema_slow)
         self.fast_ema = calculate_ema(prices_arr, self.cfg.ema_fast)
+        
+        if self.cfg.filter_enabled:
+            filter_klines = bingx_api.load_klines(self.symbol, self.cfg.filter_tf)
+            filter_prices_arr = []
+            for kline in filter_klines:
+                filter_prices_arr.append(float(kline['close']))
+            
+            self.filter_slow_ema = calculate_ema(filter_prices_arr, self.cfg.filter_ema_slow)
+            self.filter_fast_ema = calculate_ema(filter_prices_arr, self.cfg.filter_ema_fast)
+
+            for i in range(-1, -(min(len(self.filter_slow_ema), len(self.filter_fast_ema)))+2, -1):
+                if self.filter_fast_ema[i-1] < self.filter_slow_ema[i-1] and self.filter_fast_ema[i] > self.filter_slow_ema[i]:
+                    self.filter_current_side = LONG
+                    self.filter_cross_price = filter_prices_arr[i]
+                    print(i, self.filter_current_side, self.filter_cross_price)
+                    break
+                elif self.filter_fast_ema[i-1] > self.filter_slow_ema[i-1] and self.filter_fast_ema[i] < self.filter_slow_ema[i]:
+                    self.filter_current_side = SHORT
+                    self.filter_cross_price = filter_prices_arr[i]
+                    print(i, self.filter_current_side, self.filter_cross_price)
+                    break
+            
+        
         self.stopped = False
         self.is_updated = True
 
@@ -229,8 +258,20 @@ class SymbolStrategy(QObject):
 
 
         order_base = round(self.next_order_size / new_price, self.manager.get_quantity_precision(self.symbol))
+        
+        if self.cfg.filter_enabled and int(time.time() / self.cfg.filter_tf_duration) - self.filter_last_update_ts > 0:
+            self.filter_last_update_ts = int(time.time() / self.cfg.filter_tf_duration)
+            extend_ema(self.filter_fast_ema, new_price, self.cfg.filter_ema_fast)
+            extend_ema(self.filter_slow_ema, new_price, self.cfg.filter_ema_slow)
+
+            if self.filter_fast_ema[-2] < self.filter_slow_ema[-2] and self.filter_fast_ema[-1] > self.filter_slow_ema[-1]:
+                self.filter_current_side = LONG
+                self.filter_cross_price = new_price
+            elif self.filter_fast_ema[-2] > self.filter_slow_ema[-2] and self.filter_fast_ema[-1] < self.filter_slow_ema[-1]:
+                self.filter_current_side = SHORT
+                self.filter_cross_price = new_price
+
         if int(time.time() / self.cfg.timeframe_duration) - self.last_update_ts == 0:
-            self.last_update_ts = int(time.time() / self.cfg.timeframe_duration)
             return
 
         self.last_update_ts = int(time.time() / self.cfg.timeframe_duration)
@@ -245,7 +286,7 @@ class SymbolStrategy(QObject):
         signal = self.check_signal()
         if signal is None:
             return
-        
+
         if self.cfg.ema_cross_tp is not None and self.current_position_side is not None and self.current_position_side != signal:
             should_close = False
             position_gain = 0
@@ -330,6 +371,15 @@ class SymbolStrategy(QObject):
         if self.current_position_side is None and self.cfg.allowed_direction != 0:
             if self.cfg.allowed_direction != signal:
                 log_msg(f"{self.symbol}: Skip signal due to only {'SHORT' if signal == 1 else 'LONG'} signals allowed")
+                return False
+            
+        if self.cfg.filter_enabled and self.filter_current_side is not None:
+            if signal != self.filter_current_side:
+                log_msg(f"{self.symbol}: Skip signal due to Filter shows{'SHORT' if self.filter_current_side == -1 else 'LONG'} while signal is {'SHORT' if signal == -1 else 'LONG'} allowed")
+                return False
+            
+            if self.cfg.filter_max_allowed_perc_delta <= signal*(new_price - self.filter_cross_price) / self.filter_cross_price * 100:
+                log_msg(f"{self.symbol}: Skip {'SHORT' if signal == -1 else 'LONG'} signal due to Filter exceed allowed delta: {self.cfg.filter_max_allowed_perc_delta} < {abs((new_price - self.filter_cross_price) / self.filter_cross_price * 100)}")
                 return False
 
         if self.current_position_side is not None:

@@ -26,6 +26,14 @@ class StrategyCfg:
         self.sl = None
         self.ema_cross_tp = None
 
+        self.filter_enabled = False
+        self.filter_tf = None
+        self.filter_tf_index = 0
+        self.filter_tf_duration = 0
+        self.filter_ema_slow = None
+        self.filter_ema_fast = None
+        self.filter_max_allowed_perc_delta = None
+
         self.ema_slow = None
         self.ema_fast = None
 
@@ -47,6 +55,14 @@ class StrategyCfg:
         self.timeframe = symbol_data["tf"]
         self.timeframe_index = symbol_data["tf_index"]
         self.timeframe_duration = KLINES_INTERVAL_DURATION[self.timeframe]
+
+        self.filter_enabled = symbol_data.get("f_enabled", False)
+        self.filter_tf = symbol_data.get("f_tf", "1m")
+        self.filter_tf_index = symbol_data.get("f_tf_index", 0)
+        self.filter_tf_duration = KLINES_INTERVAL_DURATION[self.filter_tf]
+        self.filter_ema_slow = symbol_data.get("f_ema_slow")
+        self.filter_ema_fast = symbol_data.get("f_ema_fast")
+        self.filter_max_allowed_perc_delta = symbol_data.get("f_max_allowed_delta")
 
         self.ema_slow = symbol_data["ema_slow"]
         self.ema_fast = symbol_data["ema_fast"]
@@ -74,7 +90,14 @@ class StrategyCfg:
                     "max_mart_depth": self.max_mart_depth,
                     "mart_coef": self.mart_coef,
                     "pause_bars": self.pause_bars,
-                    "min_delta_perc": self.min_delta_perc
+                    "min_delta_perc": self.min_delta_perc,
+
+                    "f_enabled":self.filter_enabled,
+                    "f_tf":self.filter_tf,
+                    "f_tf_index":self.filter_tf_index,
+                    "f_ema_slow":self.filter_ema_slow,
+                    "f_ema_fast":self.filter_ema_fast,
+                    "f_max_allowed_delta":self.filter_max_allowed_perc_delta
                     }
 
         return cfg_dump
@@ -142,7 +165,7 @@ class StrategyManager(QObject):
             msg = f"Can't add strategy for {symbol} - max allowed strat is {MAX_CONFIGURED_STRATEGIES}; Already configured: {len(self.symbols_cfg)}"
             self.logger(msg)
             return msg
-        
+
         self.symbols_cfg[symbol] = cfg
 
     def set_max_open_positions_allowed(self, val):

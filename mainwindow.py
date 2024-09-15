@@ -10,7 +10,7 @@ from threading import Thread
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QHeaderView
 from PySide6.QtWidgets import QMessageBox, QPushButton, QHBoxLayout
-from PySide6.QtWidgets import QWidget, QRadioButton, QLabel
+from PySide6.QtWidgets import QWidget, QRadioButton, QLabel, QCheckBox
 
 from PySide6.QtCore import Qt, QAbstractTableModel
 from PySide6.QtGui import QBrush
@@ -431,6 +431,56 @@ class MainWindow(QMainWindow):
             self.popError(f"Не могу считать значение EMA_CROSS_TP: " + str(e))
             return
 
+        filter_enbaled = self.ui.filter_enabled_chkbx.isChecked()
+        filter_ema_slow = 0
+        filter_ema_fast = 0
+        filter_perc_allowed = 0
+
+        try:
+            filter_ema_slow = float(self.ui.filter_slow_ema_period_input.text())
+        except Exception as e:
+            if filter_enbaled:    
+                self.popError(f"Фильтр: Не могу считать медленную ЕМА: " + str(e))
+                return
+
+        try:
+            filter_ema_fast = float(self.ui.filter_fast_ema_period_input.text())
+        except Exception as e:
+            if filter_enbaled:
+                self.popError(f"Фильтр: Не могу считать быструю ЕМА: " + str(e))
+                return
+
+        try:
+            filter_perc_allowed = self.ui.filter_delta_limit.text()
+            if filter_perc_allowed != "":
+                filter_perc_allowed  = float(filter_perc_allowed)
+            else:
+                filter_perc_allowed = 0
+        except Exception as e:
+            if filter_enbaled:
+                self.popError(f"Фильтр: Не могу считать Макс. Дельту: " + str(e))
+                return
+
+        if self.ui.filter_enabled_chkbx.isChecked():
+            cfg.filter_enabled = True
+        else:
+            cfg.filter_enabled = False
+
+        if ema_slow < ema_fast:
+            self.popError(f"Быстрая ЕМА не может быть медленнее!")
+            return
+
+        if filter_ema_slow < filter_ema_fast:
+            self.popError(f"Фильтр: Быстрая ЕМА не может быть медленнее!")
+            return
+
+        cfg.filter_tf = self.ui.filter_tf_input.currentText()
+        cfg.filter_tf_index = self.ui.filter_tf_input.currentIndex()
+        cfg.filter_tf_duration = KLINES_INTERVAL_DURATION[cfg.filter_tf]
+        cfg.filter_ema_slow = filter_ema_slow
+        cfg.filter_ema_fast = filter_ema_fast
+        cfg.filter_max_allowed_perc_delta = filter_perc_allowed
+
         cfg.symbol = symbol
         cfg.leverage = leverage
         cfg.sl = sl_val
@@ -494,6 +544,16 @@ class MainWindow(QMainWindow):
         self.ui.mart_coef_input.setText(str(cfg.mart_coef))
         self.ui.pause_bars_num_input.setText(str(cfg.pause_bars))
         self.ui.min_delta_perc_input.setText(str(cfg.min_delta_perc))
+
+        if cfg.filter_enabled:
+            self.ui.filter_enabled_chkbx.setChecked(True)
+        else:
+            self.ui.filter_enabled_chkbx.setChecked(False)
+
+        self.ui.filter_slow_ema_period_input.setText(str(cfg.filter_ema_slow) if cfg.filter_ema_slow else "")
+        self.ui.filter_fast_ema_period_input.setText(str(cfg.filter_ema_fast) if cfg.filter_ema_fast else "")
+        self.ui.filter_delta_limit.setText(str(cfg.filter_max_allowed_perc_delta) if cfg.filter_max_allowed_perc_delta else "")
+        self.ui.filter_tf_input.setCurrentIndex(cfg.filter_tf_index)
 
 
 
@@ -594,4 +654,9 @@ class MainWindow(QMainWindow):
         self.ui.mart_coef_input.clear()
         self.ui.pause_bars_num_input.clear()
         self.ui.min_delta_perc_input.clear()
+
+        self.ui.filter_enabled_chkbx.setChecked(False)
+        self.ui.filter_slow_ema_period_input.clear()
+        self.ui.filter_fast_ema_period_input.clear()
+        self.ui.filter_delta_limit.clear()
 

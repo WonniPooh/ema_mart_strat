@@ -1,0 +1,1 @@
+python -Xutf8 ../compile_project.py
