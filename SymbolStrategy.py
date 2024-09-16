@@ -370,17 +370,20 @@ class SymbolStrategy(QObject):
             if self.cfg.allowed_direction != signal:
                 log_msg(f"{self.symbol}: Skip signal due to only {'SHORT' if signal == 1 else 'LONG'} signals allowed")
                 return False
-            
+        
         if self.cfg.filter_enabled and self.filter_current_side is not None:
-            if signal != self.filter_current_side:
-                log_msg(f"{self.symbol}: Skip signal due to Filter shows{'SHORT' if self.filter_current_side == -1 else 'LONG'} while signal is {'SHORT' if signal == -1 else 'LONG'} allowed")
-                return False
-            
             if self.cfg.filter_max_allowed_perc_delta <= signal*(new_price - self.filter_cross_price) / self.filter_cross_price * 100:
-                log_msg(f"{self.symbol}: Skip {'SHORT' if signal == -1 else 'LONG'} signal due to Filter exceed allowed delta: {self.cfg.filter_max_allowed_perc_delta} < {abs((new_price - self.filter_cross_price) / self.filter_cross_price * 100)}")
                 self.stop_updates()
-                return False
 
+                if self.current_position_side is None:
+                    log_msg(f"{self.symbol}: Skip {'SHORT' if signal == -1 else 'LONG'} signal due to Filter exceed allowed delta: {self.cfg.filter_max_allowed_perc_delta} < {abs((new_price - self.filter_cross_price) / self.filter_cross_price * 100)}")
+                    return False
+
+            if self.current_position_side is None and signal != self.filter_current_side:
+                log_msg(f"{self.symbol}: Skip signal due to Filter shows{'SHORT' if self.filter_current_side == -1 else 'LONG'} while signal is {'SHORT' if signal == -1 else 'LONG'}")
+                return False
+                
+            
         if self.current_position_side is not None:
             if signal != self.current_position_side:
                 log_msg(f"{self.symbol}: Opposite direction signal while aready in {'LONG' if self.current_position_side == 1 else 'SHORT'} position")

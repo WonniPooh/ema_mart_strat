@@ -175,22 +175,30 @@ def set_leverage(leverage, symbol, is_single_side=True):
     if is_single_side:
         arr = ["BOTH"]
 
-    for side in arr:
-        for _ in range(3):
+    for _ in range(3):
+        success = False
+        for side in arr:
             paramsMap['side'] = side
             result = send_request(method, path, paramsMap)
             jsoned_result = json.loads(result)
 
             if jsoned_result["code"] == 0:
                 log_msg(f"Плечо для {symbol} успешно изменено на {leverage}")
-                break
-
-            if jsoned_result["code"] == 109400 and "In the Hedge" in jsoned_result["msg"]:
+                success = True
+            elif jsoned_result["code"] == 109400 and "In the Hedge" in jsoned_result["msg"]:
+                log_msg(f"Установлен Хэдж для {symbol}, применяю необходимые настройки для изменения плеча")
                 arr = ["LONG", "SHORT"]
-                break
+                success = False
+            elif jsoned_result["code"] == 109400:
+                log_msg(f"Установлен односторонний режим для {symbol}, применяю необходимые настройки для изменения плеча")
+                arr = ["BOTH"]
+                success = False
             else:
-                log_msg(f"Error appeared during 'set_leverage' {side} change: {jsoned_result}")
-                break
+                log_msg(f"Ошибка при изменении плеча для {symbol} {side}: {jsoned_result}")
+                success = False
+        
+        if success:
+            break
 
 @retry_handle_except
 def is_dual_side_hedge():
