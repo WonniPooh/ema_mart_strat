@@ -21,11 +21,11 @@ class FinishedDealsDataTableModel(QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            return self._data[index.row()].get_by_index(index.column())
+            return self._data[index.row()][index.column()]
 
         if role == Qt.BackgroundRole:
             if index.column() == 8: #results
-                data = self._data[index.row()].get_by_index(index.column())
+                data = self._data[index.row()][index.column()]
                 color = QBrush(Qt.lightGray)
                 if data < 0:
                     color = QBrush(Qt.red)

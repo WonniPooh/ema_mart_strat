@@ -1,0 +1,3 @@
+{
+    "files": ["common.py","report_construction.py","mainwindow.py","form.ui","main.py","WsConnector.py"]
+}

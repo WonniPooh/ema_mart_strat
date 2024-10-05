@@ -4,7 +4,6 @@ import secrets
 import string
 from datetime import datetime
 from db_connector import db_new_finished_deal, db_insert_config, db_new_deal, db_new_finished_order
-from PySide6.QtCore import QObject, Signal
 from common import *
 import bingx_api
 
@@ -49,6 +48,22 @@ class DealReport:
         self.mart_steps = mart_steps
         self.timestamp_start = ts_start
         self.timestamp_end = ts_end
+        self.data_as_arr = []
+
+    def convert_to_array(self):
+        self.data_as_arr = [
+            self.symbol,
+            self.timeframe,
+            self.direction,
+            self.leverage,
+            datetime.fromtimestamp(self.timestamp_start).strftime("%d.%m %H:%M:%S"),
+            datetime.fromtimestamp(self.timestamp_end).strftime("%d.%m %H:%M:%S"),
+            self.total_position,
+            self.mart_steps - 1,
+            self.total_result,
+            round((self.total_result / self.total_position) * 100, 2),
+            self.commission,
+        ]
 
     def get_by_index(self, index):
         if index == 0:
@@ -75,16 +90,14 @@ class DealReport:
             return self.commission
 
 
-class SymbolStrategy(QObject):
-    strat_status_updated = Signal(str, str)
-
-    def __init__(self, cfg, manager, logger) -> None:
-        super().__init__()
+class SymbolStrategy():
+    def __init__(self, cfg, manager, show_log) -> None:
         self.manager = manager
 
-        self.logger = logger
+        self.show_log = show_log
         self.cfg = cfg
         self.config_id = None
+        self.status = "STOPPED"
 
         self.symbol = self.cfg.symbol
         self.stopped = True
@@ -118,8 +131,8 @@ class SymbolStrategy(QObject):
 
 #        self.max_leverage = self.manager.get_symbol_max_leverage(self.symbol)
 #        if self.max_leverage < self.cfg.leverage:
-#            log_msg(f"Max allowed leverage is less then configured: {self.max_leverage} < {self.cfg.leverage}")
-#            log_msg("Setting max allowed insted of configured")
+#            self.show_log(f"Max allowed leverage is less then configured: {self.max_leverage} < {self.cfg.leverage}")
+#            self.show_log("Setting max allowed insted of configured")
 #            bingx_api.set_leverage(self.max_leverage, self.symbol)
 #        else:
 
@@ -129,14 +142,14 @@ class SymbolStrategy(QObject):
         current_margin_type = bingx_api.get_current_margin_type(self.symbol)
 
         if current_margin_type is None or current_margin_type.lower() != self.cfg.margin_type.lower():
-            log_msg("Failed to get current margin type")
+            self.show_log("Failed to get current margin type")
             result = bingx_api.change_margin_type(self.symbol, self.cfg.margin_type_index)
             if result is not None:
-                log_msg(f"Failed to change margin type for {self.symbol}")
+                self.show_log(f"Failed to change margin type for {self.symbol}")
             else:
-                log_msg(f"Success changing margin type for {self.symbol}: Margin type {self.cfg.margin_type}")
+                self.show_log(f"Success changing margin type for {self.symbol}: Margin type {self.cfg.margin_type}")
         else:
-            log_msg(f"No need to change margin type for {self.symbol}: Margin type already {self.cfg.margin_type}")
+            self.show_log(f"No need to change margin type for {self.symbol}: Margin type already {self.cfg.margin_type}")
 
         try:
             bingx_api.set_leverage(self.cfg.leverage, self.symbol)
@@ -172,7 +185,8 @@ class SymbolStrategy(QObject):
         self.is_updated = True
 
         self.config_id = db_insert_config(json.dumps(self.cfg.construct_cfg_dump()))
-        self.strat_status_updated.emit(self.symbol, "STARTED")
+        self.manager.strat_status_updated(self.symbol, "STARTED")
+        self.status = "STARTED"
 
     def rapid_stop(self):
         self.stopped = True
@@ -183,15 +197,18 @@ class SymbolStrategy(QObject):
                                                       quantity=self.total_position_size)
             self.process_position_closed(order_result)
 
-        self.strat_status_updated.emit(self.symbol, "STOPPED")
+        self.manager.strat_status_updated(self.symbol, "STOPPED")
+        self.status = "STOPPED"
 
     def stop_updates(self):
         self.is_updated = False
-        self.strat_status_updated.emit(self.symbol, "DROPPED_UPDATES")
+        self.manager.strat_status_updated(self.symbol, "DROPPED_UPDATES")
+        self.status = "DROPPED_UPDATES"
 
         if self.total_position_value == 0:
             self.stopped = True
-            self.strat_status_updated.emit(self.symbol, "STOPPED")
+            self.manager.strat_status_updated(self.symbol, "STOPPED")
+            self.status = "STOPPED"
 
     def process_position_closed(self, order_result):
         order_id = order_result["data"]["order"]["orderId"]
@@ -202,7 +219,7 @@ class SymbolStrategy(QObject):
         position_value = float(order_data["data"]["order"]["executedQty"]) * float(order_data["data"]["order"]["avgPrice"])
         total_result = position_value - self.total_position_value if self.current_position_side == 1 else self.total_position_value - position_value
 
-        log_msg(f"Finished deal for {self.symbol}:\n\tSide: {'LONG' if self.current_position_side == 1 else 'SHORT'}\n\t" +
+        self.show_log(f"Finished deal for {self.symbol}:\n\tSide: {'LONG' if self.current_position_side == 1 else 'SHORT'}\n\t" +
               f"Avg_price open: {self.avg_price}\n\tAvg_price close: {order_data['data']['order']['avgPrice']}\n\t" +
               f"Commission: {abs(self.commission)}\n\tFinal result: {total_result}")
 
@@ -213,6 +230,7 @@ class SymbolStrategy(QObject):
                                  mart_steps=self.mart_current_steps,
                                  total_result=total_result, commission=abs(self.commission))
 
+        deal_report.convert_to_array()
         self.manager.finished_deals.append(deal_report)
         db_new_finished_deal(self.position_id, deal_report)
         self.avg_price = 0
@@ -229,13 +247,13 @@ class SymbolStrategy(QObject):
 
         self.bars_delay = self.cfg.pause_bars
         self.manager.current_open_positions -= 1
-        log_msg(f"{self.symbol}: current_open_positions: {self.manager.current_open_positions}")
+        self.show_log(f"{self.symbol}: current_open_positions: {self.manager.current_open_positions}")
         self.manager.update_available_funds()
 
         if not self.is_updated:
             self.stopped = True
-            self.strat_status_updated.emit(self.symbol, "STOPPED")
-
+            self.manager.strat_status_updated(self.symbol, "STOPPED")
+            self.status = "STOPPED"
 
     def process_new_price(self, new_price):
         if self.current_position_side == 1: #long
@@ -279,7 +297,7 @@ class SymbolStrategy(QObject):
 
         if self.current_position_side is not None and self.bars_delay > 0:
             self.bars_delay -= 1
-            log_msg(f"{self.symbol}: Bars dealy left: {self.bars_delay}")
+            self.show_log(f"{self.symbol}: Bars dealy left: {self.bars_delay}")
 
         signal = self.check_signal()
         if signal is None:
@@ -297,7 +315,7 @@ class SymbolStrategy(QObject):
                 position_gain = ((self.avg_price - new_price) / self.avg_price)
 
             if should_close:
-                log_msg(f"{self.symbol}: Closing position: EMA CROSS + position gain {round(position_gain*100, 2)} > min allowed: {self.cfg.ema_cross_tp}")
+                self.show_log(f"{self.symbol}: Closing position: EMA CROSS + position gain {round(position_gain*100, 2)} > min allowed: {self.cfg.ema_cross_tp}")
                 order_result = bingx_api.new_market_order(self.symbol, side="SELL" if self.current_position_side == 1 else "BUY", position=self.current_position_side,
                                                           quantity=self.total_position_size)
                 self.process_position_closed(order_result)
@@ -310,25 +328,25 @@ class SymbolStrategy(QObject):
         if available_funds is not None:
             available_funds = float(available_funds)
         else:
-            log_msg(f"{self.symbol}: Skip signal - error appeared while getting available funds")
+            self.show_log(f"{self.symbol}: Skip signal - error appeared while getting available funds")
             return
 
         order_base = round(self.next_order_size / new_price, self.manager.get_quantity_precision(self.symbol))
         order_quote = order_base * new_price
 
         if available_funds < order_quote:
-            log_msg(f"{self.symbol}: Skip signal - insufficient funds: need {order_quote}, but only {available_funds} is available")
+            self.show_log(f"{self.symbol}: Skip signal - insufficient funds: need {order_quote}, but only {available_funds} is available")
             return
 
         if self.current_position_side is None:
-            log_msg(f"{self.symbol}: current_open_positions: {self.manager.current_open_positions}")
+            self.show_log(f"{self.symbol}: current_open_positions: {self.manager.current_open_positions}")
             if self.manager.current_open_positions >= self.manager.max_open_positions_allowed:
-                log_msg(f"{self.symbol}: Skip signal - max open position allowed exceeded")
+                self.show_log(f"{self.symbol}: Skip signal - max open position allowed exceeded")
                 return
 
         order_result = bingx_api.new_market_order(self.symbol, side="BUY" if signal > 0 else "SELL", position=signal, quantity=order_base)
         if order_result is None: #some failure
-            log_msg(f"{self.symbol}: Skip signal - some error on new order occured")
+            self.show_log(f"{self.symbol}: Skip signal - some error on new order occured")
             return
 
         if self.current_position_side is None:
@@ -357,18 +375,18 @@ class SymbolStrategy(QObject):
         self.next_order_size *= (1+(self.cfg.mart_coef / 100))
         self.mart_current_steps += 1
 
-        log_msg(f"{self.symbol}: Avg price: {self.avg_price}")
-        log_msg(f"{self.symbol}: Last order price: {self.last_order_price}")
-        log_msg(f"{self.symbol}: New Sl price: {self.sl_price}")
-        log_msg(f"{self.symbol}: New Tp price: {self.tp_price}")
-        log_msg(f"{self.symbol}: Mart steps: {self.mart_current_steps}")
+        self.show_log(f"{self.symbol}: Avg price: {self.avg_price}")
+        self.show_log(f"{self.symbol}: Last order price: {self.last_order_price}")
+        self.show_log(f"{self.symbol}: New Sl price: {self.sl_price}")
+        self.show_log(f"{self.symbol}: New Tp price: {self.tp_price}")
+        self.show_log(f"{self.symbol}: Mart steps: {self.mart_current_steps}")
 
         self.manager.update_available_funds()
 
     def validate_signal(self, signal, new_price):
         if self.current_position_side is None and self.cfg.allowed_direction != 0:
             if self.cfg.allowed_direction != signal:
-                log_msg(f"{self.symbol}: Skip signal due to only {'SHORT' if signal == 1 else 'LONG'} signals allowed")
+                self.show_log(f"{self.symbol}: Skip signal due to only {'SHORT' if signal == 1 else 'LONG'} signals allowed")
                 return False
         
         if self.cfg.filter_enabled and self.filter_current_side is not None:
@@ -376,35 +394,35 @@ class SymbolStrategy(QObject):
                 self.stop_updates()
 
                 if self.current_position_side is None:
-                    log_msg(f"{self.symbol}: Skip {'SHORT' if signal == -1 else 'LONG'} signal due to Filter exceed allowed delta: {self.cfg.filter_max_allowed_perc_delta} < {abs((new_price - self.filter_cross_price) / self.filter_cross_price * 100)}")
+                    self.show_log(f"{self.symbol}: Skip {'SHORT' if signal == -1 else 'LONG'} signal due to Filter exceed allowed delta: {self.cfg.filter_max_allowed_perc_delta} < {abs((new_price - self.filter_cross_price) / self.filter_cross_price * 100)}")
                     return False
 
             if self.current_position_side is None and signal != self.filter_current_side:
-                log_msg(f"{self.symbol}: Skip signal due to Filter shows{'SHORT' if self.filter_current_side == -1 else 'LONG'} while signal is {'SHORT' if signal == -1 else 'LONG'}")
+                self.show_log(f"{self.symbol}: Skip signal due to Filter shows{'SHORT' if self.filter_current_side == -1 else 'LONG'} while signal is {'SHORT' if signal == -1 else 'LONG'}")
                 return False
                 
             
         if self.current_position_side is not None:
             if signal != self.current_position_side:
-                log_msg(f"{self.symbol}: Opposite direction signal while aready in {'LONG' if self.current_position_side == 1 else 'SHORT'} position")
+                self.show_log(f"{self.symbol}: Opposite direction signal while aready in {'LONG' if self.current_position_side == 1 else 'SHORT'} position")
                 return False
 
             if self.bars_delay > 0:
-                log_msg(f"{self.symbol}: Skip signal due to awaited delay {self.bars_delay} more bars to wait")
+                self.show_log(f"{self.symbol}: Skip signal due to awaited delay {self.bars_delay} more bars to wait")
                 return False
 
             if self.mart_current_steps == self.cfg.max_mart_depth+1:
-                log_msg(f"Skip signal due to max mart step reached: {self.cfg.max_mart_depth}")
+                self.show_log(f"Skip signal due to max mart step reached: {self.cfg.max_mart_depth}")
                 return False
 
             if (self.current_position_side == LONG and new_price < self.last_order_price) or \
                 self.current_position_side == SHORT and new_price > self.last_order_price:
                 price_perc_delta = abs(self.last_order_price - new_price) / self.last_order_price * 100
                 if price_perc_delta < self.cfg.min_delta_perc:
-                    log_msg(f"{self.symbol}: Skip signal due to perc delta less then min allowed: {price_perc_delta} < {self.cfg.min_delta_perc}")
+                    self.show_log(f"{self.symbol}: Skip signal due to perc delta less then min allowed: {price_perc_delta} < {self.cfg.min_delta_perc}")
                     return False
             else:
-                log_msg(f"{self.symbol}: Skip signal due to new price goes wrong direction")
+                self.show_log(f"{self.symbol}: Skip signal due to new price goes wrong direction")
                 return False
         
         return True

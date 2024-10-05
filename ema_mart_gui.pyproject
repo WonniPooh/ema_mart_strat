@@ -1,3 +1,0 @@
-{
-    "files": ["common.py","StrategyManager.py","requirements.txt","report_construction.py","mainwindow.py","bingx_api.py","SymbolStrategy.py","db_connector.py","form.ui","main.py"]
-}

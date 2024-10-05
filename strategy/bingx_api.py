@@ -2,8 +2,11 @@ import time
 import requests
 import json
 import hmac
-from common import handle_exception, log_msg
+import os
+from common import handle_exception
 from hashlib import sha256
+
+log_msg = print
 
 APIURL = "https://open-api.bingx.com"
 FUTURES_CONTRACTS_URL = "/openApi/swap/v2/quote/contracts"
@@ -15,7 +18,7 @@ APIKEY = ""
 SECRETKEY = ""
 ACCOUNT_STATE = None
 
-with open("account.json") as f:
+with open(os.getcwd() + "/../account.json") as f:
     keys = f.read()
     keys = keys.split("\n")
     APIKEY = keys[0]

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 9.0.2, 2024-09-15T12:47:23. -->
+<!-- Written by QtCreator 9.0.2, 2024-10-03T21:55:45. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -92,7 +92,7 @@
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">qt.qt6.642.gcc_64_kit</value>
    <value type="qlonglong" key="ProjectExplorer.Target.ActiveBuildConfiguration">0</value>
    <value type="qlonglong" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
-   <value type="qlonglong" key="ProjectExplorer.Target.ActiveRunConfiguration">6</value>
+   <value type="qlonglong" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/home/oserbin/Documents/qt_projects/ema_mart_gui</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
@@ -148,119 +148,17 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">report_construction.py2</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/oserbin/Documents/qt_projects/ema_mart_gui/report_construction.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/oserbin/Documents/qt_projects/ema_mart_gui/report_construction.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/oserbin/Documents/qt_projects/ema_mart_gui/report_construction.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">main.py2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/oserbin/Documents/qt_projects/ema_mart_gui/interface/main.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/oserbin/Documents/qt_projects/ema_mart_gui/interface/main.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/oserbin/Documents/qt_projects/ema_mart_gui/interface/main.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/oserbin/Documents/qt_projects/ema_mart_gui</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/oserbin/Documents/qt_projects/ema_mart_gui/interface</value>
    </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.1">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">StrategyManager.py</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/oserbin/Documents/qt_projects/ema_mart_gui/StrategyManager.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/oserbin/Documents/qt_projects/ema_mart_gui/StrategyManager.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/oserbin/Documents/qt_projects/ema_mart_gui/StrategyManager.py</value>
-    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/oserbin/Documents/qt_projects/ema_mart_gui</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.2">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">SymbolStrategy.py</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/oserbin/Documents/qt_projects/ema_mart_gui/SymbolStrategy.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/oserbin/Documents/qt_projects/ema_mart_gui/SymbolStrategy.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/oserbin/Documents/qt_projects/ema_mart_gui/SymbolStrategy.py</value>
-    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/oserbin/Documents/qt_projects/ema_mart_gui</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.3">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">db_connector.py</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/oserbin/Documents/qt_projects/ema_mart_gui/db_connector.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/oserbin/Documents/qt_projects/ema_mart_gui/db_connector.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/oserbin/Documents/qt_projects/ema_mart_gui/db_connector.py</value>
-    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/oserbin/Documents/qt_projects/ema_mart_gui</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.4">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">common.py</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/oserbin/Documents/qt_projects/ema_mart_gui/common.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/oserbin/Documents/qt_projects/ema_mart_gui/common.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/oserbin/Documents/qt_projects/ema_mart_gui/common.py</value>
-    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/oserbin/Documents/qt_projects/ema_mart_gui</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.5">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">mainwindow.py</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/oserbin/Documents/qt_projects/ema_mart_gui/mainwindow.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/oserbin/Documents/qt_projects/ema_mart_gui/mainwindow.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/oserbin/Documents/qt_projects/ema_mart_gui/mainwindow.py</value>
-    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/oserbin/Documents/qt_projects/ema_mart_gui</value>
-   </valuemap>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.6">
-    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
-    <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="CustomOutputParsers"/>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">main.py</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/oserbin/Documents/qt_projects/ema_mart_gui/main.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/oserbin/Documents/qt_projects/ema_mart_gui/main.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/oserbin/Documents/qt_projects/ema_mart_gui/main.py</value>
-    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
-    <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/oserbin/Documents/qt_projects/ema_mart_gui</value>
-   </valuemap>
-   <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">7</value>
+   <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
  </data>
  <data>

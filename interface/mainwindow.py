@@ -16,9 +16,8 @@ from PySide6.QtCore import Qt, QAbstractTableModel
 from PySide6.QtGui import QBrush
 
 from common import *
-from StrategyManager import *
+from WsConnector import WsConnector
 from report_construction import RunningDealsDataTableModel, FinishedDealsDataTableModel
-import bingx_api
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -34,6 +33,7 @@ class MainWindow(QMainWindow):
         self.m_thread = Thread(target=self.run_time_since_start_counter, daemon=True)
         self.m_thread.start()
 
+
         self.log_file = open("strat.log", "a")
         self.allowed_uid = "8768769"
         self.current_balance_color = ""
@@ -42,8 +42,6 @@ class MainWindow(QMainWindow):
         self.managed_symbols_layouts = {}
         self.managed_symbols_indicators = {}
 
-        self.strat_manager = StrategyManager(self.show_log, self.update_balance_lbl, self.update_btc_price_lbl)
-
         self.ui.start_all_btn.clicked.connect(self.startStrategies)
         self.ui.load_cfg_btn.clicked.connect(self.loadConfig)
         self.ui.save_cfg_btn.clicked.connect(self.saveConfig)
@@ -51,173 +49,191 @@ class MainWindow(QMainWindow):
         self.ui.clean_input_btn.clicked.connect(self.cleanCfgInput)
         self.ui.refresh_open_deals_btn.clicked.connect(self.refreshOpenDeals)
         self.ui.refresh_finished_deals_btn.clicked.connect(self.refreshFinishedDeals)
-        self.ui.max_simultaneous_deals_btn.clicked.connect(self.applyMaxSimulDeals)
-        self.ui.account_mode_btn.clicked.connect(self.applyAccMode)
-        self.ui.btc_stop_long_btn.clicked.connect(self.applyBtcLongStop)
-        self.ui.btc_stop_short_btn.clicked.connect(self.applyBtcShortStop)
-        self.ui.update_btc_price_btn.clicked.connect(self.update_btc_price_lbl)
+        self.ui.apply_strat_settings_btn.clicked.connect(self.setStratSettings)
+        self.ui.update_btc_price_btn.clicked.connect(self.request_btc_price)
+
+        self.ui.deal_deposit_input.textChanged.connect(self.update_max_deal_deposit)
+        self.ui.max_mart_depth_input.textChanged.connect(self.update_max_deal_deposit)
+        self.ui.mart_coef_input.textChanged.connect(self.update_max_deal_deposit)
 
         self.ui.rapid_stop_all_btn.clicked.connect(self.rapidStopStrategies)
         self.ui.stop_all_btn.clicked.connect(self.stopStrategies)
         self.deals_report_brief = []
+        self.acc_uid = None
+        self.configured_strategies = {}
 
-        is_hedge = bingx_api.is_dual_side_hedge()
-        if is_hedge is not None:
-            self.ui.account_mode_input.setCurrentIndex(int(is_hedge))
-            bingx_api.ACCOUNT_STATE = int(is_hedge)
+        self.ws_connection = WsConnector(self.wsMsgProcessor, self.onWsConnectionEstablished)
 
-    def check_uid(self):
-        account_uid = bingx_api.get_account_uid()
-        if account_uid["data"]["uid"] != int("1" + "0"*len(self.allowed_uid)) - int(self.allowed_uid):
-            self.popError("UID аккаунта не совпадает с разрешённым! Проверьте что АПИ-ключи от нужного аккаунта")
-            return False
-        else:
-            return True
+    def onWsConnectionEstablished(self):
+        self.request_account_uid()
+        self.request_account_mode()
+        self.request_running_strat()
 
-    def applyAccMode(self):
-        success, msg = self.strat_manager.apply_account_mode(self.ui.account_mode_input.currentIndex())
-        if not success:
-            if msg is None:
-                self.popError("Нельзя менять при запущенных стратегиях!")
-            else:
-                self.popError(f"Возникла ошибка при попытке изменения: {msg}")
-
-            is_hedge = bingx_api.is_dual_side_hedge()
-            if is_hedge is not None:
-                self.ui.account_mode_input.setCurrentIndex(int(is_hedge))
-
-    def applyMaxSimulDeals(self):
-        max_simul_deals = self.ui.max_simultaneous_deals_input.text()
-        if max_simul_deals != "":
-            try:
-                max_simul_deals = int(max_simul_deals)
-                self.strat_manager.set_max_open_positions_allowed(max_simul_deals)
-            except Exception as e:
-                self.popError("Не получилось считать ограничение на макс. кол-во одновременных сделок")
-
-    def applyBtcLongStop(self):
-        btc_long_stop_price = self.ui.btc_stop_long_input.text()
-        if btc_long_stop_price != "":
-            try:
-                btc_long_stop_price = int(btc_long_stop_price)
-                self.strat_manager.btc_stop_long = btc_long_stop_price
-                self.show_log(f"Успешно установлен стоп BTC ЛОНГ по цене {btc_long_stop_price}")
-            except Exception as e:
-                self.popError(f"Не получилось считать стоп BTC ЛОНГ: {e}")
-        else:
-            self.strat_manager.btc_stop_long = None
-            self.show_log(f"Успешно снят стоп BTC ЛОНГ")
-
-
-    def applyBtcShortStop(self):
-        btc_short_stop_price = self.ui.btc_stop_short_input.text()
-        if btc_short_stop_price != "":
-            try:
-                btc_short_stop_price = int(btc_short_stop_price)
-                self.strat_manager.btc_stop_short = btc_short_stop_price
-                self.show_log(f"Успешно установлен стоп BTC ШОРТ по цене {btc_short_stop_price}")
-            except Exception as e:
-                self.popError(f"Не получилось считать стоп BTC ШОРТ: {e}")
-        else:
-            self.strat_manager.btc_stop_short = None
-            self.show_log(f"Успешно снят стоп BTC ШОРТ")
-
-    def closeEvent(self,event):
-        result = QMessageBox.question(self,
-                      "Confirm Exit...",
-                      "Are you sure you want to exit ?",
-                      QMessageBox.Yes| QMessageBox.No)
-        event.ignore()
-
-        if result == QMessageBox.Yes:
-            event.accept()
-
-    def show_log(self, text):
+    def wsMsgProcessor(self, msg):
         try:
-            now = datetime.now()
-            date_time = now.strftime("%d/%m, %H:%M:%S")
-            final_text = date_time + " " + text + "\n"
-            self.ui.logger_field.append(final_text)
-            self.log_file.write(final_text)
-            self.log_file.flush()
+            parsed = json.loads(msg)
+            msg_type = parsed.get("type")
+
+            if msg_type == "error":
+                self.popError(parsed["msg"])
+
+            if msg_type == "info":
+                self.show_log(parsed["msg"])
+
+            if msg_type == "price":
+                if parsed["symbol"] == "BTC-USDT":
+                    self.update_btc_price_lbl(parsed["data"])
+            
+            if msg_type == "uid":
+                self.setUid(parsed["data"])
+
+            if msg_type == "account_mode":
+                self.displayAccMode(parsed["data"])
+
+            if msg_type == "active_deals":
+                self.displayOpenDeals(parsed["data"])
+
+            if msg_type == "finished_deals":
+                self.displayFinishedDeals(parsed["data"])
+
+            if msg_type == "running_strategies":
+                self.addConfigs(parsed["data"])
+
+            if msg_type == "strat_config":
+                self.showStratSettings(parsed["data"])
+
+            if msg_type == "status_update":
+                self.on_strat_new_status(parsed["symbol"], parsed["status"])
+
         except Exception as e:
             handle_exception(e)
-            try:
-                self.log_file.close()
-                self.log_file = open("strat.log", "a")
-            except Exception as e:
-                handle_exception(e)
+
+    def displayAccMode(self, mode):
+        self.ui.account_mode_input.setCurrentIndex(int(mode))
+
+    def setUid(self, uid):
+        if uid != 0:
+            self.acc_uid = uid
+        else:
+            self.popError(f"Не получилось получить UID! Попробуйте перезагрузить программу")
+
+    def request_running_strat(self):
+        self.ws_connection.send_message(json.dumps({"type":"running_strategies"}))
+
+    def request_account_uid(self):
+        self.ws_connection.send_message(json.dumps({"type":"uid"}))
+
+    def request_account_mode(self):
+        self.ws_connection.send_message(json.dumps({"type":"account_mode"}))
+
+    def check_uid(self):
+        return True
+        if self.acc_uid is None:
+            self.request_account_uid()
+            self.popError("Не могу получить ID аккаунта! Проверьте что стратегия запущена и попытайтесь снова!")
+        else:
+            if self.acc_uid != int("1" + "0"*len(self.allowed_uid)) - int(self.allowed_uid):
+                self.popError("UID аккаунта не совпадает с разрешённым! Проверьте что АПИ-ключи от нужного аккаунта")
+                return False
+            else:
+                return True
+
+    def showStratSettings(self, settings):
+        try:
+            self.ui.max_simultaneous_deals_input.setText(str(settings["max_deals"]))
+            self.ui.btc_stop_long_input.setText(str(settings["btc_long_stop"]))
+            self.ui.btc_stop_short_input.setText(str(settings["btc_short_stop"]))
+            self.ui.account_mode_input.setCurrentIndex(int(settings["is_hedge"]))
+        except Exception as e:
+            handle_exception(e)
+
+    def setStratSettings(self):
+        try:
+            max_simul_deals = self.ui.max_simultaneous_deals_input.text()
+            btc_long_stop_price = self.ui.btc_stop_long_input.text()
+            btc_short_stop_price = self.ui.btc_stop_short_input.text()
+            accout_mode = self.ui.account_mode_input.currentIndex()
+
+
+            self.ws_connection.send_message(json.dumps({"type": "strat_config", 
+                                                        "data": {"max_deals": max_simul_deals,
+                                                                "btc_long_stop": btc_long_stop_price,
+                                                                "btc_short_stop": btc_short_stop_price,
+                                                                "is_hedge": int(accout_mode)}}))
+        except Exception as e:
+            handle_exception(e)   
 
     def refreshFinishedDeals(self):
-        if len(self.strat_manager.finished_deals) > 0:
-            model = FinishedDealsDataTableModel(self.strat_manager.finished_deals)
+        self.ws_connection.send_message(json.dumps({"type":"finished_deals"}))
+
+    def displayFinishedDeals(self, finished_deals):
+        if len(finished_deals) > 0:
+            model = FinishedDealsDataTableModel(finished_deals)
             self.ui.finished_deals_table.setModel(model)
         else:
             self.show_log("Невозможно обновить - Данные отсутствуют")
 
     def refreshOpenDeals(self):
-        data = []
-        symbols = list(self.strat_manager.strategies.keys())
-        symbols.sort()
+        self.ws_connection.send_message(json.dumps({"type":"active_deals"}))
 
-        ["Инструмент", "Направление", "Плечо", "ТФ(мин)",
-         "Вложено $", "Сред. Цена", "Шаг Март.", "Время Открытия"]
-        for symbol in symbols:
-            if self.strat_manager.strategies[symbol].current_position_side is not None:
-                strat = self.strat_manager.strategies[symbol]
-                description = []
-                time_deal_start = datetime.fromtimestamp(strat.ts_deal_start).strftime("%H:%M:%S")
-                description.append(strat.symbol)
-                description.append("LONG" if strat.current_position_side == 1 else "SHORT")
-                description.append(strat.cfg.leverage)
-                description.append(strat.cfg.timeframe)
-                description.append(strat.total_position_value)
-                description.append(round(strat.avg_price, 10))
-                description.append(strat.mart_current_steps-1)
-                description.append(time_deal_start)
-                data.append(description)
-
-        model = RunningDealsDataTableModel(data)
+    def displayOpenDeals(self, running_deals):
+        model = RunningDealsDataTableModel(running_deals)
         self.ui.open_deals_table.setModel(model)
-        if len(data) == 0:
+        if len(running_deals) == 0:
             self.show_log("Данные отсутствуют")
 
     def startStrategies(self):
         if not self.check_uid():
             return
 
-        is_all_running = True
-        if len(self.strat_manager.strategies) == 0:
-            is_all_running = False
-        else:
-            for strat in self.strat_manager.strategies.values():
-                if strat.stopped:
-                    is_all_running = False
-                    break
-        if not is_all_running:
-            self.strat_manager.start_strategies(self.on_strat_new_status)
-        else:
-            self.popError("Нечего делать - ВСЁ стратегии запущены")
+        if len(self.configured_strategies) == 0:
+            self.popError("Нечего делать - нет сконфигурированных стратегий")
+        
+        for symbol, config in self.configured_strategies.items():
+            self.ws_connection.send_message(json.dumps({"type":"start", 
+                                                        "symbol":symbol, 
+                                                        "config": config["cfg"]}))      
 
+
+    def stopSingleStrat(self):
+        symbol = self.sender().objectName().split("_")[0]
+        config = self.configured_strategies[symbol]
+        if config["status"] == "STARTED":
+            self.ws_connection.send_message(json.dumps({"type":"stop", 
+                                                        "symbol":symbol}))
+    
+    def rapidStopSingleStrat(self):
+        symbol = self.sender().objectName().split("_")[0]
+
+        config = self.configured_strategies[symbol]
+        if config["status"] != "STOPPED":
+            self.ws_connection.send_message(json.dumps({"type":"rapid_stop", 
+                                                        "symbol":symbol}))
 
     def stopStrategies(self):
-        self.strat_manager.stop()
+        for symbol, config in self.configured_strategies.items():
+            if config["status"] == "STARTED":
+                self.ws_connection.send_message(json.dumps({"type":"stop", 
+                                                            "symbol":symbol}))
 
     def rapidStopStrategies(self):
-        is_running = False
-        for strat in self.strat_manager.strategies.values():
-            if not strat.stopped:
-                is_running = True
-                break
-
-        if is_running:
-            self.strat_manager.rapid_stop()
-        else:
-            self.popError("Нечего делать - Ни одна стратегия НЕ запущена")
+        for symbol, config in self.configured_strategies.items():
+            if config["status"] != "STOPPED":
+                self.ws_connection.send_message(json.dumps({"type":"rapid_stop", 
+                                                            "symbol":symbol}))
+    
+    def startSingleStrat(self):
+        if not self.check_uid():
             return
+        symbol = self.sender().objectName().split("_")[0]
+        
+        self.ws_connection.send_message(json.dumps({"type":"start", 
+                                                    "symbol":symbol, 
+                                                    "config": self.configured_strategies[symbol]["cfg"]}))  
 
     def on_strat_new_status(self, symbol, status):
         indicator = self.managed_symbols_indicators[symbol]
+        self.configured_strategies[symbol]["status"] = status
         if status == "STOPPED":
             self.set_indicator_color(indicator, "red")
         elif status == "STARTED":
@@ -225,8 +241,12 @@ class MainWindow(QMainWindow):
         elif status == "DROPPED_UPDATES":
             self.set_indicator_color(indicator, "yellow")
 
+
+
+    def request_btc_price(self):
+        self.ws_connection.send_message(json.dumps({"type":"get_price", "symbol":"BTC-USDT"}))
+    
     def update_btc_price_lbl(self, price):
-        price = self.strat_manager.get_symbol_price("BTC-USDT")
         if price is not None:
             self.ui.current_btc_price_lbl.setText(str(price))
         else:
@@ -284,8 +304,8 @@ class MainWindow(QMainWindow):
 
     def loadConfig(self):
         is_running = False
-        for _, strat in self.strat_manager.strategies.items():
-            if not strat.stopped:
+        for _, strat in self.configured_strategies.items():
+            if strat["status"] != "STOPPED":
                 is_running = True
                 break
 
@@ -303,23 +323,29 @@ class MainWindow(QMainWindow):
             data = f.read()
             loaded_cfg = json.loads(data)
 
-        managed_symbols = list(self.strat_manager.symbols_cfg.keys())
+        managed_symbols = list(self.configured_strategies.keys())
 
         for symbol in managed_symbols:
             self.deleteManagedSymbol(symbol)
 
+        self.addConfigs(loaded_cfg)
+
+    def addConfigs(self, loaded_cfg):
         symbols = list(loaded_cfg.keys())
         symbols.sort()
 
         for symbol in symbols:
             symbol_data = loaded_cfg[symbol]
-            cfg = StrategyCfg()
-            cfg.parse_jsoned_cfg(symbol, symbol_data)
-            result = self.strat_manager.add_new_cfg(symbol, cfg)
-            if result:
-                self.popError(result)
-                continue
+            status = symbol_data.get("status")
+            if status is not None:
+                del symbol_data["status"]
+            else:
+                status = "STOPPED"
+            
+            self.configured_strategies[symbol] = {"cfg": symbol_data, 
+                                                  "status": status}
             self.addManageButtons(symbol)
+            self.on_strat_new_status(symbol, status)
         self.updateTotalSymbols()
 
     def saveConfig(self):
@@ -332,9 +358,9 @@ class MainWindow(QMainWindow):
             return
 
         symbols_config = {}
-        for symbol in self.strat_manager.symbols_cfg:
-            data = self.strat_manager.symbols_cfg[symbol]
-            symbols_config[symbol] = data.construct_cfg_dump()
+        for symbol in self.configured_strategies:
+            data = self.configured_strategies[symbol]
+            symbols_config[symbol] = data["cfg"]
 
         str_cfg = json.dumps(symbols_config)
         with open(cfg_filename[0], "w") as f:
@@ -344,17 +370,17 @@ class MainWindow(QMainWindow):
         symbol = self.ui.symbol_input.text()
         symbol = symbol.upper()
 
-        strat = self.strat_manager.strategies.get(symbol)
+        strat_cfg = self.configured_strategies.get(symbol)
 
-        if strat is not None and strat.stopped == False:
+        if strat_cfg is not None and strat_cfg["stopped"] == False:
             self.popError("Невозможно добавить конфигурацию для актива при запущенной стратегии")
             return
 
-        cfg = StrategyCfg()
+        if len(self.configured_strategies) >= MAX_CONFIGURED_STRATEGIES:
+            self.popError(f"Невозможно добавить конфигурацию - максимальное разрешённое число конфигураций {MAX_CONFIGURED_STRATEGIES}")
+            return
 
-#        if symbol not in self.strat_manager.symbols_data:
-#            self.popError(f"Invalid Symbol: {symbol}")
-#            return
+        cfg = {}
 
         #TODO max_leverage check
         try:
@@ -462,9 +488,9 @@ class MainWindow(QMainWindow):
                 return
 
         if self.ui.filter_enabled_chkbx.isChecked():
-            cfg.filter_enabled = True
+            cfg["f_enabled"] = True
         else:
-            cfg.filter_enabled = False
+            cfg["f_enabled"] = False
 
         if ema_slow < ema_fast:
             self.popError(f"Быстрая ЕМА не может быть медленнее!")
@@ -474,96 +500,92 @@ class MainWindow(QMainWindow):
             self.popError(f"Фильтр: Быстрая ЕМА не может быть медленнее!")
             return
 
-        cfg.filter_tf = self.ui.filter_tf_input.currentText()
-        cfg.filter_tf_index = self.ui.filter_tf_input.currentIndex()
-        cfg.filter_tf_duration = KLINES_INTERVAL_DURATION[cfg.filter_tf]
-        cfg.filter_ema_slow = filter_ema_slow
-        cfg.filter_ema_fast = filter_ema_fast
-        cfg.filter_max_allowed_perc_delta = filter_perc_allowed
+        cfg["f_tf"] = self.ui.filter_tf_input.currentText()
+        cfg["f_tf_index"] = self.ui.filter_tf_input.currentIndex()
+        cfg["f_ema_slow"] = filter_ema_slow
+        cfg["f_ema_fast"] = filter_ema_fast
+        cfg["f_max_allowed_delta"] = filter_perc_allowed
 
-        cfg.symbol = symbol
-        cfg.leverage = leverage
-        cfg.sl = sl_val
-        cfg.tp = tp_val
-        cfg.ema_cross_tp = ema_cross_tp_val
-        cfg.ema_slow = ema_slow
-        cfg.ema_fast = ema_fast
-        cfg.pause_bars = pause_bars
-        cfg.min_delta_perc = min_delta_perc
-        cfg.max_mart_depth = max_mart_depth
-        cfg.mart_coef = mart_coef
-        cfg.timeframe = self.ui.tf_input.currentText()
-        cfg.timeframe_index = self.ui.tf_input.currentIndex()
-        cfg.timeframe_duration = KLINES_INTERVAL_DURATION[cfg.timeframe]
+        cfg["symbol"] = symbol
+        cfg["leverage"] = leverage
+        cfg["sl"] = sl_val
+        cfg["tp"] = tp_val
+        cfg["ema_cross_tp"] = ema_cross_tp_val
+        cfg["ema_slow"] = ema_slow
+        cfg["ema_fast"] = ema_fast
+        cfg["pause_bars"] = pause_bars
+        cfg["min_delta_perc"] = min_delta_perc
+        cfg["max_mart_depth"] = max_mart_depth
+        cfg["mart_coef"] = mart_coef
+        cfg["tf"] = self.ui.tf_input.currentText()
+        cfg["tf_index"] = self.ui.tf_input.currentIndex()
 
-        cfg.deal_deposit = float(deal_deposit)
-        cfg.margin_type = self.ui.margin_type_input.currentText()
-        cfg.allowed_direction = self.ui.allowed_direction_input.currentIndex()
-        if cfg.allowed_direction == 2:
-            cfg.allowed_direction = -1
-        cfg.margin_type_index = self.ui.margin_type_input.currentIndex()
+        cfg["deal_deposit"] = float(deal_deposit)
+        cfg["margin_type"] = self.ui.margin_type_input.currentText()
+        cfg["allowed_direction"] = self.ui.allowed_direction_input.currentIndex()
+        if cfg["allowed_direction"] == 2:
+            cfg["allowed_direction"] = -1
+        cfg["margin_type_index"] = self.ui.margin_type_input.currentIndex()
 
-        if symbol in self.strat_manager.symbols_cfg:
+        if strat_cfg is not None:
             ret = QMessageBox.question(self,'', "Данный символ уже добавлен.\n Добавить символ с новой конфигурацией?", QMessageBox.Yes | QMessageBox.No)
 
             if ret == QMessageBox.No:
                 return
+        
+        strat_cfg = {"stopped": True,
+                     "cfg": cfg}
 
-        result = self.strat_manager.add_new_cfg(symbol, cfg)
-        if result is not None:
-            self.popError(result)
-            return
+        self.configured_strategies[symbol] = strat_cfg
 
         self.addManageButtons(symbol)
         self.updateTotalSymbols()
 
     def showSymbolConfig(self):
         symbol = self.sender().objectName().split("_")[0]
-        cfg = self.strat_manager.symbols_cfg[symbol]
+        cfg = self.configured_strategies[symbol]["cfg"]
 
         self.ui.symbol_input.setText(symbol)
-        self.ui.leverage_input.setText(str(cfg.leverage))
-        self.ui.deal_deposit_input.setText(str(cfg.deal_deposit))
-        self.ui.margin_type_input.setCurrentIndex(cfg.margin_type_index)
-        if cfg.allowed_direction != -1:
-            self.ui.allowed_direction_input.setCurrentIndex(cfg.allowed_direction)
+        self.ui.leverage_input.setText(str(cfg["leverage"]))
+        self.ui.deal_deposit_input.setText(str(cfg["deal_deposit"]))
+        self.ui.margin_type_input.setCurrentIndex(cfg["margin_type_index"])
+        if cfg["allowed_direction"] != -1:
+            self.ui.allowed_direction_input.setCurrentIndex(cfg["allowed_direction"])
         else:
             self.ui.allowed_direction_input.setCurrentIndex(2)
-        self.ui.tp_input.setText(str(cfg.tp))
-        if cfg.sl is not None:
-            self.ui.sl_input.setText(str(cfg.sl))
+        self.ui.tp_input.setText(str(cfg["tp"]))
+        if cfg["sl"] is not None:
+            self.ui.sl_input.setText(str(cfg["sl"]))
         else:
             self.ui.sl_input.setText("")
-        if cfg.ema_cross_tp is not None:
-            self.ui.ema_cross_tp_input.setText(str(cfg.ema_cross_tp))
+        if cfg["ema_cross_tp"] is not None:
+            self.ui.ema_cross_tp_input.setText(str(cfg["ema_cross_tp"]))
 
-        self.ui.tf_input.setCurrentIndex(cfg.timeframe_index)
-        self.ui.slow_ema_period_input.setText(str(cfg.ema_slow))
-        self.ui.fast_ema_period_input.setText(str(cfg.ema_fast))
-        self.ui.max_mart_depth_input.setText(str(cfg.max_mart_depth))
-        self.ui.mart_coef_input.setText(str(cfg.mart_coef))
-        self.ui.pause_bars_num_input.setText(str(cfg.pause_bars))
-        self.ui.min_delta_perc_input.setText(str(cfg.min_delta_perc))
+        self.ui.tf_input.setCurrentIndex(cfg["tf_index"])
+        self.ui.slow_ema_period_input.setText(str(cfg["ema_slow"]))
+        self.ui.fast_ema_period_input.setText(str(cfg["ema_fast"]))
+        self.ui.max_mart_depth_input.setText(str(cfg["max_mart_depth"]))
+        self.ui.mart_coef_input.setText(str(cfg["mart_coef"]))
+        self.ui.pause_bars_num_input.setText(str(cfg["pause_bars"]))
+        self.ui.min_delta_perc_input.setText(str(cfg["min_delta_perc"]))
 
-        if cfg.filter_enabled:
+        if cfg["f_enabled"]:
             self.ui.filter_enabled_chkbx.setChecked(True)
         else:
             self.ui.filter_enabled_chkbx.setChecked(False)
 
-        self.ui.filter_slow_ema_period_input.setText(str(cfg.filter_ema_slow) if cfg.filter_ema_slow else "")
-        self.ui.filter_fast_ema_period_input.setText(str(cfg.filter_ema_fast) if cfg.filter_ema_fast else "")
-        self.ui.filter_delta_limit.setText(str(cfg.filter_max_allowed_perc_delta) if cfg.filter_max_allowed_perc_delta else "")
-        self.ui.filter_tf_input.setCurrentIndex(cfg.filter_tf_index)
-
-
+        self.ui.filter_slow_ema_period_input.setText(str(cfg["f_ema_slow"]) if cfg["f_ema_slow"] else "")
+        self.ui.filter_fast_ema_period_input.setText(str(cfg["f_ema_fast"]) if cfg["f_ema_fast"] else "")
+        self.ui.filter_delta_limit.setText(str(cfg["f_max_allowed_delta"]) if cfg["f_max_allowed_delta"] else "")
+        self.ui.filter_tf_input.setCurrentIndex(cfg["f_tf_index"])
 
     def deleteManagedSymbol(self, symbol=False):
         if symbol is False:
             symbol = self.sender().objectName().split("_")[0]
 
-        strat = self.strat_manager.strategies.get(symbol)
+        strat = self.configured_strategies.get(symbol)
 
-        if strat and not strat.stopped:
+        if strat and strat["status"] != "STOPPED":
             self.popError(f"Стратегия запущена, удаление невозможно")
             return
 
@@ -574,15 +596,37 @@ class MainWindow(QMainWindow):
         widget.deleteLater()
         del self.managed_symbols_indicators[symbol]
         del self.managed_symbols_layouts[symbol]
-        del self.strat_manager.symbols_cfg[symbol]
+        del self.configured_strategies[symbol]
         self.updateTotalSymbols()
-
 
     def set_indicator_color(self, indicator, color):
         indicator.setStyleSheet("QRadioButton::indicator"
                                            "{"
                                            f"background-color : {color}"
                                            "}")
+
+    def update_max_deal_deposit(self):
+        try:
+            first_deal_deposit = self.ui.deal_deposit_input.text()
+            addition_orders_num = self.ui.max_mart_depth_input.text()
+            mart_coef = self.ui.mart_coef_input.text()
+
+            if mart_coef != "" and addition_orders_num != "" and first_deal_deposit != "":
+                last_deal_deposit = float(first_deal_deposit)
+                max_deal_deposit = last_deal_deposit
+                mart_coef = float(mart_coef)/100 + 1
+                addition_orders_num = int(float(addition_orders_num))
+                
+                for _ in range(1, addition_orders_num+1):
+                    last_deal_deposit *= mart_coef
+                    max_deal_deposit += last_deal_deposit
+
+                max_deal_deposit = int(max_deal_deposit)
+                self.ui.max_deal_deposit.setText(str(max_deal_deposit))
+            else:
+                self.ui.max_deal_deposit.setText("")
+        except Exception as e:
+            handle_exception(e)
 
     def addManageButtons(self, symbol):
         if symbol in self.managed_symbols_layouts:
@@ -605,9 +649,9 @@ class MainWindow(QMainWindow):
 
         symbol_btn.clicked.connect(self.showSymbolConfig)
         delete_btn.clicked.connect(self.deleteManagedSymbol)
-        start_btn.clicked.connect(self.start_single_strategy)
-        rapid_stop_btn.clicked.connect(self.strat_manager.rapid_stop_single_strat)
-        stop_updates_btn.clicked.connect(self.strat_manager.stop_single_strat)
+        start_btn.clicked.connect(self.startSingleStrat)
+        rapid_stop_btn.clicked.connect(self.rapidStopSingleStrat)
+        stop_updates_btn.clicked.connect(self.stopSingleStrat)
 
         hbox.addWidget(radio_indicator)
         hbox.addWidget(symbol_btn)
@@ -619,12 +663,6 @@ class MainWindow(QMainWindow):
         self.managed_symbols_indicators[symbol] = radio_indicator
         self.managed_symbols_layouts[symbol] = widget
         self.ui.configuredSymbolsVLayout.addWidget(widget)
-
-    def start_single_strategy(self):
-        if not self.check_uid():
-            return
-        symbol = self.sender().objectName().split("_")[0]
-        self.strat_manager.init_strategy(symbol, True, self.on_strat_new_status)
 
     def updateTotalSymbols(self):
         self.ui.total_symbols_val.setText(str(len(self.managed_symbols_layouts.keys())))
@@ -659,4 +697,31 @@ class MainWindow(QMainWindow):
         self.ui.filter_slow_ema_period_input.clear()
         self.ui.filter_fast_ema_period_input.clear()
         self.ui.filter_delta_limit.clear()
+
+    def closeEvent(self,event):
+        result = QMessageBox.question(self,
+                      "Confirm Exit...",
+                      "Are you sure you want to exit ?",
+                      QMessageBox.Yes| QMessageBox.No)
+        event.ignore()
+
+        if result == QMessageBox.Yes:
+            self.ws_connection.send_message(json.dumps({"type":"shut_down"}))
+            event.accept()
+
+    def show_log(self, text):
+        try:
+            now = datetime.now()
+            date_time = now.strftime("%d/%m, %H:%M:%S")
+            final_text = date_time + " " + text + "\n"
+            self.ui.logger_field.append(final_text)
+            self.log_file.write(final_text)
+            self.log_file.flush()
+        except Exception as e:
+            handle_exception(e)
+            try:
+                self.log_file.close()
+                self.log_file = open("interface.log", "a")
+            except Exception as e:
+                handle_exception(e)
 
