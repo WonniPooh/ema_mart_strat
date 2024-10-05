@@ -102,6 +102,9 @@ class MainWindow(QMainWindow):
             if msg_type == "strat_config":
                 self.showStratSettings(parsed["data"])
 
+            if msg_type == "balance":
+                self.update_balance_lbl(float(parsed["init"]), float(parsed["current"]))
+
             if msg_type == "status_update":
                 self.on_strat_new_status(parsed["symbol"], parsed["status"])
 
@@ -252,7 +255,8 @@ class MainWindow(QMainWindow):
         else:
             self.popError("Не получилось получить цену!")
 
-    def update_balance_lbl(self, start, current, delta):
+    def update_balance_lbl(self, start, current):
+        delta = current - start
         self.ui.depo_start_val.setText(str(round(start, 1)))
         self.ui.depo_current_val.setText(str(round(current,1)))
         if delta < 0 and self.current_balance_color != "RED":

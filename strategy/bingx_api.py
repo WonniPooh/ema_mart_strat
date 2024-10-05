@@ -18,7 +18,7 @@ APIKEY = ""
 SECRETKEY = ""
 ACCOUNT_STATE = None
 
-with open(os.getcwd() + "/../account.json") as f:
+with open(os.getcwd() + "/account.json") as f:
     keys = f.read()
     keys = keys.split("\n")
     APIKEY = keys[0]
