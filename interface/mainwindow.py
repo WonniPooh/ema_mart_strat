@@ -341,6 +341,7 @@ class MainWindow(QMainWindow):
         for symbol in symbols:
             symbol_data = loaded_cfg[symbol]
             status = symbol_data.get("status")
+            
             if status is not None:
                 del symbol_data["status"]
             else:
@@ -376,7 +377,7 @@ class MainWindow(QMainWindow):
 
         strat_cfg = self.configured_strategies.get(symbol)
 
-        if strat_cfg is not None and strat_cfg["stopped"] == False:
+        if strat_cfg is not None and strat_cfg["status"] != "STOPPED":
             self.popError("Невозможно добавить конфигурацию для актива при запущенной стратегии")
             return
 
@@ -496,6 +497,11 @@ class MainWindow(QMainWindow):
         else:
             cfg["f_enabled"] = False
 
+        if self.ui.filter_disable_position_add_chkbx.isChecked():
+            cfg["f_add_pos_disabled"] = True
+        else:
+            cfg["f_add_pos_disabled"] = False
+
         if ema_slow < ema_fast:
             self.popError(f"Быстрая ЕМА не может быть медленнее!")
             return
@@ -537,7 +543,7 @@ class MainWindow(QMainWindow):
             if ret == QMessageBox.No:
                 return
         
-        strat_cfg = {"stopped": True,
+        strat_cfg = {"status": "STOPPED",
                      "cfg": cfg}
 
         self.configured_strategies[symbol] = strat_cfg
@@ -577,6 +583,11 @@ class MainWindow(QMainWindow):
             self.ui.filter_enabled_chkbx.setChecked(True)
         else:
             self.ui.filter_enabled_chkbx.setChecked(False)
+        
+        if cfg.get("f_add_pos_disabled"):
+            self.ui.filter_disable_position_add_chkbx.setChecked(True)
+        else:
+            self.ui.filter_disable_position_add_chkbx.setChecked(False)
 
         self.ui.filter_slow_ema_period_input.setText(str(cfg["f_ema_slow"]) if cfg["f_ema_slow"] else "")
         self.ui.filter_fast_ema_period_input.setText(str(cfg["f_ema_fast"]) if cfg["f_ema_fast"] else "")
@@ -698,6 +709,7 @@ class MainWindow(QMainWindow):
         self.ui.min_delta_perc_input.clear()
 
         self.ui.filter_enabled_chkbx.setChecked(False)
+        self.ui.filter_disable_position_add_chkbx.setChecked(False)
         self.ui.filter_slow_ema_period_input.clear()
         self.ui.filter_fast_ema_period_input.clear()
         self.ui.filter_delta_limit.clear()

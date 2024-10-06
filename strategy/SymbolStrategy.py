@@ -101,7 +101,7 @@ class SymbolStrategy():
 
         self.symbol = self.cfg.symbol
         self.stopped = True
-        self.is_updated = False #if position is active, but no klines updates allowed
+        self.is_updated = False #if position is active, after it is closed the strat quits
 
         self.slow_ema = []
         self.fast_ema = []
@@ -397,7 +397,7 @@ class SymbolStrategy():
                     self.show_log(f"{self.symbol}: Skip {'SHORT' if signal == -1 else 'LONG'} signal due to Filter exceed allowed delta: {self.cfg.filter_max_allowed_perc_delta} < {abs((new_price - self.filter_cross_price) / self.filter_cross_price * 100)}")
                     return False
 
-            if self.current_position_side is None and signal != self.filter_current_side:
+            if (self.current_position_side is None or self.cfg.filter_position_add_disabled) and signal != self.filter_current_side:
                 self.show_log(f"{self.symbol}: Skip signal due to Filter shows{'SHORT' if self.filter_current_side == -1 else 'LONG'} while signal is {'SHORT' if signal == -1 else 'LONG'}")
                 return False
                 

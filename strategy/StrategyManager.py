@@ -28,6 +28,7 @@ class StrategyCfg:
         self.ema_cross_tp = None
 
         self.filter_enabled = False
+        self.filter_position_add_disabled = False
         self.filter_tf = None
         self.filter_tf_index = 0
         self.filter_tf_duration = 0
@@ -60,6 +61,7 @@ class StrategyCfg:
         self.timeframe_duration = KLINES_INTERVAL_DURATION[self.timeframe]
 
         self.filter_enabled = symbol_data.get("f_enabled", False)
+        self.filter_position_add_disabled = symbol_data.get("f_add_pos_disabled", False)
         self.filter_tf = symbol_data.get("f_tf", "1m")
         self.filter_tf_index = symbol_data.get("f_tf_index", 0)
         self.filter_tf_duration = KLINES_INTERVAL_DURATION[self.filter_tf]
@@ -96,6 +98,7 @@ class StrategyCfg:
                     "min_delta_perc": self.min_delta_perc,
 
                     "f_enabled":self.filter_enabled,
+                    "f_add_pos_disabled":self.filter_position_add_disabled,
                     "f_tf":self.filter_tf,
                     "f_tf_index":self.filter_tf_index,
                     "f_ema_slow":self.filter_ema_slow,

@@ -176,30 +176,38 @@ class Ui_MainWindow(object):
         self.gridFrame.setFrameShape(QFrame.Box)
         self.gridLayout_7 = QGridLayout(self.gridFrame)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.filter_slow_ema_period_input = QLineEdit(self.gridFrame)
+        self.filter_slow_ema_period_input.setObjectName(u"filter_slow_ema_period_input")
+
+        self.gridLayout_7.addWidget(self.filter_slow_ema_period_input, 5, 1, 1, 1)
+
         self.filter_delta_limit = QLineEdit(self.gridFrame)
         self.filter_delta_limit.setObjectName(u"filter_delta_limit")
 
-        self.gridLayout_7.addWidget(self.filter_delta_limit, 5, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.filter_delta_limit, 7, 1, 1, 1)
+
+        self.filter_enabled_chkbx = QCheckBox(self.gridFrame)
+        self.filter_enabled_chkbx.setObjectName(u"filter_enabled_chkbx")
+        self.filter_enabled_chkbx.setLayoutDirection(Qt.LeftToRight)
+        self.filter_enabled_chkbx.setStyleSheet(u"margin-left:50%; \n"
+"margin-right:50%;")
+
+        self.gridLayout_7.addWidget(self.filter_enabled_chkbx, 1, 1, 1, 1)
+
+        self.label_7 = QLabel(self.gridFrame)
+        self.label_7.setObjectName(u"label_7")
+
+        self.gridLayout_7.addWidget(self.label_7, 4, 0, 1, 1)
+
+        self.filter_fast_ema_period_input = QLineEdit(self.gridFrame)
+        self.filter_fast_ema_period_input.setObjectName(u"filter_fast_ema_period_input")
+
+        self.gridLayout_7.addWidget(self.filter_fast_ema_period_input, 6, 1, 1, 1)
 
         self.label_11 = QLabel(self.gridFrame)
         self.label_11.setObjectName(u"label_11")
 
         self.gridLayout_7.addWidget(self.label_11, 1, 0, 1, 1)
-
-        self.filter_slow_ema_period_input = QLineEdit(self.gridFrame)
-        self.filter_slow_ema_period_input.setObjectName(u"filter_slow_ema_period_input")
-
-        self.gridLayout_7.addWidget(self.filter_slow_ema_period_input, 3, 1, 1, 1)
-
-        self.label_8 = QLabel(self.gridFrame)
-        self.label_8.setObjectName(u"label_8")
-
-        self.gridLayout_7.addWidget(self.label_8, 3, 0, 1, 1)
-
-        self.label_7 = QLabel(self.gridFrame)
-        self.label_7.setObjectName(u"label_7")
-
-        self.gridLayout_7.addWidget(self.label_7, 2, 0, 1, 1)
 
         self.filter_tf_input = QComboBox(self.gridFrame)
         self.filter_tf_input.addItem("")
@@ -213,36 +221,40 @@ class Ui_MainWindow(object):
         self.filter_tf_input.addItem("")
         self.filter_tf_input.setObjectName(u"filter_tf_input")
 
-        self.gridLayout_7.addWidget(self.filter_tf_input, 2, 1, 1, 1)
-
-        self.filter_enabled_chkbx = QCheckBox(self.gridFrame)
-        self.filter_enabled_chkbx.setObjectName(u"filter_enabled_chkbx")
-        self.filter_enabled_chkbx.setLayoutDirection(Qt.LeftToRight)
-        self.filter_enabled_chkbx.setStyleSheet(u"margin-left:50%; \n"
-"margin-right:50%;")
-
-        self.gridLayout_7.addWidget(self.filter_enabled_chkbx, 1, 1, 1, 1)
-
-        self.filter_fast_ema_period_input = QLineEdit(self.gridFrame)
-        self.filter_fast_ema_period_input.setObjectName(u"filter_fast_ema_period_input")
-
-        self.gridLayout_7.addWidget(self.filter_fast_ema_period_input, 4, 1, 1, 1)
-
-        self.label_10 = QLabel(self.gridFrame)
-        self.label_10.setObjectName(u"label_10")
-
-        self.gridLayout_7.addWidget(self.label_10, 5, 0, 1, 1)
+        self.gridLayout_7.addWidget(self.filter_tf_input, 4, 1, 1, 1)
 
         self.label_9 = QLabel(self.gridFrame)
         self.label_9.setObjectName(u"label_9")
 
-        self.gridLayout_7.addWidget(self.label_9, 4, 0, 1, 1)
+        self.gridLayout_7.addWidget(self.label_9, 6, 0, 1, 1)
 
         self.label_6 = QLabel(self.gridFrame)
         self.label_6.setObjectName(u"label_6")
         self.label_6.setAlignment(Qt.AlignCenter)
 
         self.gridLayout_7.addWidget(self.label_6, 0, 0, 1, 2)
+
+        self.label_10 = QLabel(self.gridFrame)
+        self.label_10.setObjectName(u"label_10")
+
+        self.gridLayout_7.addWidget(self.label_10, 7, 0, 1, 1)
+
+        self.label_8 = QLabel(self.gridFrame)
+        self.label_8.setObjectName(u"label_8")
+
+        self.gridLayout_7.addWidget(self.label_8, 5, 0, 1, 1)
+
+        self.filter_disable_position_add_chkbx = QCheckBox(self.gridFrame)
+        self.filter_disable_position_add_chkbx.setObjectName(u"filter_disable_position_add_chkbx")
+        self.filter_disable_position_add_chkbx.setStyleSheet(u"margin-left:50%; \n"
+"margin-right:50%;")
+
+        self.gridLayout_7.addWidget(self.filter_disable_position_add_chkbx, 2, 1, 1, 1)
+
+        self.label_13 = QLabel(self.gridFrame)
+        self.label_13.setObjectName(u"label_13")
+
+        self.gridLayout_7.addWidget(self.label_13, 2, 0, 1, 1)
 
         self.gridLayout_7.setRowStretch(0, 1)
         self.gridLayout_7.setColumnStretch(0, 2)
@@ -633,12 +645,12 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_general), QCoreApplication.translate("MainWindow", u"\u041e\u0431\u0449\u0430\u044f \u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430", None))
         self.load_cfg_btn.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044e", None))
         self.save_cfg_btn.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0442\u0435\u043a\u0443\u0449\u0443\u044e \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044e", None))
-        self.filter_delta_limit.setText("")
-        self.label_11.setText(QCoreApplication.translate("MainWindow", u"\u0412\u043a\u043b\u044e\u0447\u0435\u043d", None))
         self.filter_slow_ema_period_input.setText("")
-        self.label_8.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0435\u0440\u0438\u043e\u0434 \u041c\u0435\u0434\u043b\u0435\u043d\u043d\u043e\u0439\n"
-"\u0415\u041c\u0410 (\u0431\u0430\u0440\u043e\u0432)", None))
+        self.filter_delta_limit.setText("")
+        self.filter_enabled_chkbx.setText("")
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0430\u0439\u043c\u0444\u0440\u0435\u0439\u043c", None))
+        self.filter_fast_ema_period_input.setText("")
+        self.label_11.setText(QCoreApplication.translate("MainWindow", u"\u0412\u043a\u043b\u044e\u0447\u0435\u043d", None))
         self.filter_tf_input.setItemText(0, QCoreApplication.translate("MainWindow", u"1m", None))
         self.filter_tf_input.setItemText(1, QCoreApplication.translate("MainWindow", u"3m", None))
         self.filter_tf_input.setItemText(2, QCoreApplication.translate("MainWindow", u"5m", None))
@@ -649,12 +661,14 @@ class Ui_MainWindow(object):
         self.filter_tf_input.setItemText(7, QCoreApplication.translate("MainWindow", u"6h", None))
         self.filter_tf_input.setItemText(8, QCoreApplication.translate("MainWindow", u"12h", None))
 
-        self.filter_enabled_chkbx.setText("")
-        self.filter_fast_ema_period_input.setText("")
-        self.label_10.setText(QCoreApplication.translate("MainWindow", u"\u041c\u0430\u043a\u0441. \u0440\u0430\u0437\u0440\u0435\u0448 \u0434\u0435\u043b\u044c\u0442\u0430 (%)", None))
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0435\u0440\u0438\u043e\u0434 \u0411\u044b\u0441\u0442\u0440\u043e\u0439\n"
 "\u0415\u041c\u0410 (\u0431\u0430\u0440\u043e\u0432)", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0438\u043b\u044c\u0442\u0440:", None))
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"\u041c\u0430\u043a\u0441. \u0440\u0430\u0437\u0440\u0435\u0448 \u0434\u0435\u043b\u044c\u0442\u0430 (%)", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0435\u0440\u0438\u043e\u0434 \u041c\u0435\u0434\u043b\u0435\u043d\u043d\u043e\u0439\n"
+"\u0415\u041c\u0410 (\u0431\u0430\u0440\u043e\u0432)", None))
+        self.filter_disable_position_add_chkbx.setText("")
+        self.label_13.setText(QCoreApplication.translate("MainWindow", u"\u041d\u0435\u0442 \u0414\u043e\u043a\u0443\u043f\u043a\u0438 \u0432 \u043f\u043e\u0437\u0438\u0446\u0438\u0438", None))
         self.total_symbols.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0441\u0435\u0433\u043e \u043f\u0430\u0440:", None))
         self.total_symbols_val.setText("")
         self.tf_input.setItemText(0, QCoreApplication.translate("MainWindow", u"1m", None))
