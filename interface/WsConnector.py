@@ -21,12 +21,13 @@ class WsConnector:
 
         self.ws_port = 8877
         try:
-            with open("../port.txt", "r") as f:
+            with open("ws_port.txt", "r") as f:
                 self.ws_port = int(f.read())
         except Exception as e:
             print(e)
             self.ws_port = 8877
 
+        print("WS runs on port", self.ws_port)
         self.process_income_msg = msg_processor
         self.try_connect()
 

@@ -76,7 +76,7 @@ def start_server(input_cmd_queue, output_cmd_queue):
     # Define a handler for the single WebSocket connection
     ws_port = 8877
     try:
-        with open("../port.txt", "r") as f:
+        with open("ws_port.txt", "r") as f:
             ws_port = int(f.read())
     except Exception as e:
         handle_exception(e)
