@@ -15,18 +15,18 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
-    QGridLayout, QHBoxLayout, QHeaderView, QLabel,
-    QLineEdit, QMainWindow, QMenuBar, QPushButton,
-    QScrollArea, QSizePolicy, QSpacerItem, QStatusBar,
-    QTabWidget, QTableView, QTextBrowser, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
+    QFrame, QGridLayout, QHBoxLayout, QHeaderView,
+    QLabel, QLineEdit, QMainWindow, QMenuBar,
+    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
+    QStatusBar, QTabWidget, QTableView, QTextBrowser,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1240, 838)
+        MainWindow.resize(1240, 932)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_12 = QGridLayout(self.centralwidget)
@@ -266,7 +266,7 @@ class Ui_MainWindow(object):
         self.configuredSymbolsScrollArea.setWidgetResizable(True)
         self.configuredSymbolsScrollAreaWidget = QWidget()
         self.configuredSymbolsScrollAreaWidget.setObjectName(u"configuredSymbolsScrollAreaWidget")
-        self.configuredSymbolsScrollAreaWidget.setGeometry(QRect(0, 0, 477, 526))
+        self.configuredSymbolsScrollAreaWidget.setGeometry(QRect(0, 0, 477, 620))
         self.verticalLayout = QVBoxLayout(self.configuredSymbolsScrollAreaWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.configuredSymbolsVLayout = QVBoxLayout()
@@ -604,6 +604,261 @@ class Ui_MainWindow(object):
         self.gridLayout_3.addWidget(self.frame2, 4, 3, 1, 1)
 
         self.tabWidget.addTab(self.tab_settings, "")
+        self.report_tab = QWidget()
+        self.report_tab.setObjectName(u"report_tab")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.report_tab.sizePolicy().hasHeightForWidth())
+        self.report_tab.setSizePolicy(sizePolicy)
+        self.report_tab.setMinimumSize(QSize(0, 0))
+        self.gridLayout_19 = QGridLayout(self.report_tab)
+        self.gridLayout_19.setObjectName(u"gridLayout_19")
+        self.gridLayout_17 = QGridLayout()
+        self.gridLayout_17.setObjectName(u"gridLayout_17")
+        self.label_21 = QLabel(self.report_tab)
+        self.label_21.setObjectName(u"label_21")
+        self.label_21.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_17.addWidget(self.label_21, 2, 0, 1, 1)
+
+        self.gridLayout_29 = QGridLayout()
+        self.gridLayout_29.setObjectName(u"gridLayout_29")
+        self.label_67 = QLabel(self.report_tab)
+        self.label_67.setObjectName(u"label_67")
+
+        self.gridLayout_29.addWidget(self.label_67, 2, 0, 1, 1)
+
+        self.deals_profit_out_2 = QLabel(self.report_tab)
+        self.deals_profit_out_2.setObjectName(u"deals_profit_out_2")
+
+        self.gridLayout_29.addWidget(self.deals_profit_out_2, 0, 1, 1, 1)
+
+        self.label_66 = QLabel(self.report_tab)
+        self.label_66.setObjectName(u"label_66")
+
+        self.gridLayout_29.addWidget(self.label_66, 3, 0, 1, 1)
+
+        self.label_68 = QLabel(self.report_tab)
+        self.label_68.setObjectName(u"label_68")
+
+        self.gridLayout_29.addWidget(self.label_68, 1, 0, 1, 1)
+
+        self.deals_loss_total_out = QLabel(self.report_tab)
+        self.deals_loss_total_out.setObjectName(u"deals_loss_total_out")
+
+        self.gridLayout_29.addWidget(self.deals_loss_total_out, 1, 2, 1, 1)
+
+        self.deals_result_total_out = QLabel(self.report_tab)
+        self.deals_result_total_out.setObjectName(u"deals_result_total_out")
+
+        self.gridLayout_29.addWidget(self.deals_result_total_out, 3, 2, 1, 1)
+
+        self.label_29 = QLabel(self.report_tab)
+        self.label_29.setObjectName(u"label_29")
+
+        self.gridLayout_29.addWidget(self.label_29, 4, 0, 1, 1)
+
+        self.deals_loss_out = QLabel(self.report_tab)
+        self.deals_loss_out.setObjectName(u"deals_loss_out")
+
+        self.gridLayout_29.addWidget(self.deals_loss_out, 1, 1, 1, 1)
+
+        self.deals_result_total_period_start = QLabel(self.report_tab)
+        self.deals_result_total_period_start.setObjectName(u"deals_result_total_period_start")
+
+        self.gridLayout_29.addWidget(self.deals_result_total_period_start, 4, 1, 1, 1)
+
+        self.deals_result_total_period_end = QLabel(self.report_tab)
+        self.deals_result_total_period_end.setObjectName(u"deals_result_total_period_end")
+
+        self.gridLayout_29.addWidget(self.deals_result_total_period_end, 4, 2, 1, 1)
+
+        self.deals_num_total_out = QLabel(self.report_tab)
+        self.deals_num_total_out.setObjectName(u"deals_num_total_out")
+
+        self.gridLayout_29.addWidget(self.deals_num_total_out, 3, 1, 1, 1)
+
+        self.deals_profit_total_out = QLabel(self.report_tab)
+        self.deals_profit_total_out.setObjectName(u"deals_profit_total_out")
+
+        self.gridLayout_29.addWidget(self.deals_profit_total_out, 2, 2, 1, 1)
+
+        self.result_report_lbl = QLabel(self.report_tab)
+        self.result_report_lbl.setObjectName(u"result_report_lbl")
+
+        self.gridLayout_29.addWidget(self.result_report_lbl, 0, 2, 1, 1)
+
+        self.deals_profit_out = QLabel(self.report_tab)
+        self.deals_profit_out.setObjectName(u"deals_profit_out")
+
+        self.gridLayout_29.addWidget(self.deals_profit_out, 2, 1, 1, 1)
+
+        self.label_49 = QLabel(self.report_tab)
+        self.label_49.setObjectName(u"label_49")
+
+        self.gridLayout_29.addWidget(self.label_49, 0, 3, 1, 1)
+
+        self.deals_loss_total_perc_out = QLabel(self.report_tab)
+        self.deals_loss_total_perc_out.setObjectName(u"deals_loss_total_perc_out")
+
+        self.gridLayout_29.addWidget(self.deals_loss_total_perc_out, 1, 3, 1, 1)
+
+        self.deals_profit_total_perc_out = QLabel(self.report_tab)
+        self.deals_profit_total_perc_out.setObjectName(u"deals_profit_total_perc_out")
+
+        self.gridLayout_29.addWidget(self.deals_profit_total_perc_out, 2, 3, 1, 1)
+
+        self.deals_result_total_perc_out = QLabel(self.report_tab)
+        self.deals_result_total_perc_out.setObjectName(u"deals_result_total_perc_out")
+
+        self.gridLayout_29.addWidget(self.deals_result_total_perc_out, 3, 3, 1, 1)
+
+
+        self.gridLayout_17.addLayout(self.gridLayout_29, 1, 0, 1, 1)
+
+        self.label_20 = QLabel(self.report_tab)
+        self.label_20.setObjectName(u"label_20")
+        self.label_20.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_17.addWidget(self.label_20, 0, 1, 1, 1)
+
+        self.report_cfgDetailsScrollArea = QScrollArea(self.report_tab)
+        self.report_cfgDetailsScrollArea.setObjectName(u"report_cfgDetailsScrollArea")
+        self.report_cfgDetailsScrollArea.setWidgetResizable(True)
+        self.report_cfgDetailsScrollAreaWidget = QWidget()
+        self.report_cfgDetailsScrollAreaWidget.setObjectName(u"report_cfgDetailsScrollAreaWidget")
+        self.report_cfgDetailsScrollAreaWidget.setGeometry(QRect(0, 0, 370, 86))
+        self.verticalLayout_5 = QVBoxLayout(self.report_cfgDetailsScrollAreaWidget)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.report_cfgDetailsVLayout = QVBoxLayout()
+        self.report_cfgDetailsVLayout.setObjectName(u"report_cfgDetailsVLayout")
+        self.report_cfgVerticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.report_cfgDetailsVLayout.addItem(self.report_cfgVerticalSpacer)
+
+
+        self.verticalLayout_5.addLayout(self.report_cfgDetailsVLayout)
+
+        self.report_cfgDetailsScrollArea.setWidget(self.report_cfgDetailsScrollAreaWidget)
+
+        self.gridLayout_17.addWidget(self.report_cfgDetailsScrollArea, 3, 0, 1, 1)
+
+        self.report_brief_deal_data_tableView = QTableView(self.report_tab)
+        self.report_brief_deal_data_tableView.setObjectName(u"report_brief_deal_data_tableView")
+
+        self.gridLayout_17.addWidget(self.report_brief_deal_data_tableView, 1, 1, 3, 1)
+
+        self.gridLayout_17.setColumnStretch(1, 2)
+        self.gridLayout_17.setColumnMinimumWidth(1, 30)
+
+        self.gridLayout_19.addLayout(self.gridLayout_17, 1, 0, 1, 2)
+
+        self.tp_deal_report_tableView = QTableView(self.report_tab)
+        self.tp_deal_report_tableView.setObjectName(u"tp_deal_report_tableView")
+
+        self.gridLayout_19.addWidget(self.tp_deal_report_tableView, 3, 0, 1, 1)
+
+        self.label_14 = QLabel(self.report_tab)
+        self.label_14.setObjectName(u"label_14")
+        self.label_14.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_19.addWidget(self.label_14, 2, 0, 1, 2)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.report_parms_grid = QGridLayout()
+        self.report_parms_grid.setObjectName(u"report_parms_grid")
+        self.report_datetime_since_input = QDateTimeEdit(self.report_tab)
+        self.report_datetime_since_input.setObjectName(u"report_datetime_since_input")
+        self.report_datetime_since_input.setInputMethodHints(Qt.ImhNone)
+        self.report_datetime_since_input.setDate(QDate(2023, 12, 31))
+        self.report_datetime_since_input.setTime(QTime(23, 0, 0))
+
+        self.report_parms_grid.addWidget(self.report_datetime_since_input, 1, 1, 1, 1)
+
+        self.report_this_day_btn = QPushButton(self.report_tab)
+        self.report_this_day_btn.setObjectName(u"report_this_day_btn")
+
+        self.report_parms_grid.addWidget(self.report_this_day_btn, 3, 0, 1, 2)
+
+        self.report_past_24h_btn = QPushButton(self.report_tab)
+        self.report_past_24h_btn.setObjectName(u"report_past_24h_btn")
+
+        self.report_parms_grid.addWidget(self.report_past_24h_btn, 4, 0, 1, 2)
+
+        self.report_datetime_till_input = QDateTimeEdit(self.report_tab)
+        self.report_datetime_till_input.setObjectName(u"report_datetime_till_input")
+        self.report_datetime_till_input.setInputMethodHints(Qt.ImhNone)
+        self.report_datetime_till_input.setDate(QDate(2023, 12, 31))
+        self.report_datetime_till_input.setTime(QTime(23, 0, 0))
+
+        self.report_parms_grid.addWidget(self.report_datetime_till_input, 2, 1, 1, 1)
+
+        self.report_show_report_btn = QPushButton(self.report_tab)
+        self.report_show_report_btn.setObjectName(u"report_show_report_btn")
+        self.report_show_report_btn.setStyleSheet(u"background: rgb(143, 240, 164);\n"
+"font: 11pt \"Cantarell\";\n"
+"color:  rgb(0, 0, 0);")
+
+        self.report_parms_grid.addWidget(self.report_show_report_btn, 6, 0, 1, 2)
+
+        self.label_64 = QLabel(self.report_tab)
+        self.label_64.setObjectName(u"label_64")
+
+        self.report_parms_grid.addWidget(self.label_64, 2, 0, 1, 1)
+
+        self.report_symbol_input = QLineEdit(self.report_tab)
+        self.report_symbol_input.setObjectName(u"report_symbol_input")
+
+        self.report_parms_grid.addWidget(self.report_symbol_input, 0, 1, 1, 1)
+
+        self.label_65 = QLabel(self.report_tab)
+        self.label_65.setObjectName(u"label_65")
+
+        self.report_parms_grid.addWidget(self.label_65, 0, 0, 1, 1)
+
+        self.label_63 = QLabel(self.report_tab)
+        self.label_63.setObjectName(u"label_63")
+
+        self.report_parms_grid.addWidget(self.label_63, 1, 0, 1, 1)
+
+        self.report_since_startup_btn = QPushButton(self.report_tab)
+        self.report_since_startup_btn.setObjectName(u"report_since_startup_btn")
+
+        self.report_parms_grid.addWidget(self.report_since_startup_btn, 5, 0, 1, 2)
+
+
+        self.horizontalLayout.addLayout(self.report_parms_grid)
+
+        self.verticalLayout_6 = QVBoxLayout()
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.report_show_all_symbols_history_btn = QPushButton(self.report_tab)
+        self.report_show_all_symbols_history_btn.setObjectName(u"report_show_all_symbols_history_btn")
+
+        self.verticalLayout_6.addWidget(self.report_show_all_symbols_history_btn)
+
+        self.report_show_all_symbols_period_btn = QPushButton(self.report_tab)
+        self.report_show_all_symbols_period_btn.setObjectName(u"report_show_all_symbols_period_btn")
+
+        self.verticalLayout_6.addWidget(self.report_show_all_symbols_period_btn)
+
+        self.report_all_symbols_history_tableView = QTableView(self.report_tab)
+        self.report_all_symbols_history_tableView.setObjectName(u"report_all_symbols_history_tableView")
+        self.report_all_symbols_history_tableView.horizontalHeader().setCascadingSectionResizes(True)
+        self.report_all_symbols_history_tableView.horizontalHeader().setStretchLastSection(False)
+
+        self.verticalLayout_6.addWidget(self.report_all_symbols_history_tableView)
+
+
+        self.horizontalLayout.addLayout(self.verticalLayout_6)
+
+        self.horizontalLayout.setStretch(0, 1)
+        self.horizontalLayout.setStretch(1, 3)
+
+        self.gridLayout_19.addLayout(self.horizontalLayout, 0, 0, 1, 2)
+
+        self.tabWidget.addTab(self.report_tab, "")
 
         self.gridLayout_12.addWidget(self.tabWidget, 0, 0, 1, 1)
 
@@ -618,7 +873,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -742,5 +997,39 @@ class Ui_MainWindow(object):
         self.ema_cross_tp_input.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u041c\u0438\u043d. % \u0434\u043b\u044f \u043e\u0442\u0440\u0430\u0431\u043e\u0442\u043a\u0438", None))
         self.header_2.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u0435\u043c\u0435\u0442\u0440\u044b \u0432\u044b\u0445\u043e\u0434\u0430 \u0438\u0437 \u0441\u0434\u0435\u043b\u043a\u0438", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_settings), QCoreApplication.translate("MainWindow", u"\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435", None))
+        self.label_21.setText(QCoreApplication.translate("MainWindow", u"\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u043c\u044b\u0435 \u041a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u0438:", None))
+        self.label_67.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0434\u0435\u043b\u043e\u043a \u0432 \u041f\u043b\u044e\u0441", None))
+        self.deals_profit_out_2.setText(QCoreApplication.translate("MainWindow", u"\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e", None))
+        self.label_66.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0434\u0435\u043b\u043e\u043a \u0412\u0441\u0435\u0433\u043e", None))
+        self.label_68.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0434\u0435\u043b\u043e\u043a \u0432 \u041c\u0438\u043d\u0443\u0441", None))
+        self.deals_loss_total_out.setText("")
+        self.deals_result_total_out.setText("")
+        self.label_29.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0435\u0440\u0438\u043e\u0434 (\u043e\u0442 - \u0434\u043e)", None))
+        self.deals_loss_out.setText("")
+        self.deals_result_total_period_start.setText("")
+        self.deals_result_total_period_end.setText("")
+        self.deals_num_total_out.setText("")
+        self.deals_profit_total_out.setText("")
+        self.result_report_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442", None))
+        self.deals_profit_out.setText("")
+        self.label_49.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 %", None))
+        self.deals_loss_total_perc_out.setText("")
+        self.deals_profit_total_perc_out.setText("")
+        self.deals_result_total_perc_out.setText("")
+        self.label_20.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0434\u0435\u043b\u043a\u0438 \u0437\u0430 \u0443\u043a\u0430\u0437\u0430\u043d\u043d\u044b\u0439 \u043f\u0435\u0440\u0438\u043e\u0434:", None))
+        self.label_14.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0434\u0440\u043e\u0431\u043d\u043e\u0441\u0442\u0438 \u043f\u043e \u0441\u0434\u0435\u043b\u043a\u0435:", None))
+        self.report_datetime_since_input.setDisplayFormat(QCoreApplication.translate("MainWindow", u"d/M/yy h:mm", None))
+        self.report_this_day_btn.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430 \u044d\u0442\u043e\u0442 \u0434\u0435\u043d\u044c", None))
+        self.report_past_24h_btn.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430 24 \u0447\u0430\u0441\u0430", None))
+        self.report_datetime_till_input.setDisplayFormat(QCoreApplication.translate("MainWindow", u"d/M/yy h:mm", None))
+        self.report_show_report_btn.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c", None))
+        self.label_64.setText(QCoreApplication.translate("MainWindow", u"Period End", None))
+        self.report_symbol_input.setText(QCoreApplication.translate("MainWindow", u"ALL", None))
+        self.label_65.setText(QCoreApplication.translate("MainWindow", u"Symbol", None))
+        self.label_63.setText(QCoreApplication.translate("MainWindow", u"Period Start", None))
+        self.report_since_startup_btn.setText(QCoreApplication.translate("MainWindow", u"\u0421 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0433\u043e \u0437\u0430\u043f\u0443\u0441\u043a\u0430", None))
+        self.report_show_all_symbols_history_btn.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u043f\u0430\u0440\u044b \u0437\u0430 \u0432\u0441\u0451 \u0432\u0440\u0435\u043c\u044f", None))
+        self.report_show_all_symbols_period_btn.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u043f\u0430\u0440\u044b \u0437\u0430 \u0432\u044b\u0431\u0440\u0430\u043d\u044b\u0439 \u043f\u0435\u0440\u0438\u043e\u0434", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.report_tab), QCoreApplication.translate("MainWindow", u"\u041e\u0442\u0447\u0451\u0442", None))
     # retranslateUi
 

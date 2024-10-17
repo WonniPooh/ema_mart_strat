@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1240</width>
-    <height>838</height>
+    <height>932</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_general">
        <attribute name="title">
@@ -381,7 +381,7 @@ margin-right:50%;</string>
              <x>0</x>
              <y>0</y>
              <width>477</width>
-             <height>526</height>
+             <height>620</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
@@ -898,6 +898,376 @@ margin-right:50%;</string>
            </item>
           </layout>
          </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="report_tab">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <attribute name="title">
+        <string>Отчёт</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_19" rowstretch="0,0,0,0" columnstretch="0,0">
+        <item row="1" column="0" colspan="2">
+         <layout class="QGridLayout" name="gridLayout_17" columnstretch="0,2" rowminimumheight="0,0,0,0" columnminimumwidth="0,30">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_21">
+            <property name="text">
+             <string>Используемые Конфигурации:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <layout class="QGridLayout" name="gridLayout_29">
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_67">
+              <property name="text">
+               <string>Сделок в Плюс</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="deals_profit_out_2">
+              <property name="text">
+               <string>Количество</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_66">
+              <property name="text">
+               <string>Сделок Всего</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_68">
+              <property name="text">
+               <string>Сделок в Минус</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="deals_loss_total_out">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QLabel" name="deals_result_total_out">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_29">
+              <property name="text">
+               <string>Период (от - до)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="deals_loss_out">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="deals_result_total_period_start">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QLabel" name="deals_result_total_period_end">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="deals_num_total_out">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLabel" name="deals_profit_total_out">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="result_report_lbl">
+              <property name="text">
+               <string>Результат</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="deals_profit_out">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QLabel" name="label_49">
+              <property name="text">
+               <string>Результат %</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QLabel" name="deals_loss_total_perc_out">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QLabel" name="deals_profit_total_perc_out">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="3">
+             <widget class="QLabel" name="deals_result_total_perc_out">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_20">
+            <property name="text">
+             <string>Сделки за указанный период:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QScrollArea" name="report_cfgDetailsScrollArea">
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="report_cfgDetailsScrollAreaWidget">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>370</width>
+               <height>86</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <layout class="QVBoxLayout" name="report_cfgDetailsVLayout">
+                <item>
+                 <spacer name="report_cfgVerticalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+          <item row="1" column="1" rowspan="3">
+           <widget class="QTableView" name="report_brief_deal_data_tableView"/>
+          </item>
+         </layout>
+        </item>
+        <item row="3" column="0">
+         <widget class="QTableView" name="tp_deal_report_tableView"/>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="QLabel" name="label_14">
+          <property name="text">
+           <string>Подробности по сделке:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,3">
+          <item>
+           <layout class="QGridLayout" name="report_parms_grid">
+            <item row="1" column="1">
+             <widget class="QDateTimeEdit" name="report_datetime_since_input">
+              <property name="inputMethodHints">
+               <set>Qt::ImhNone</set>
+              </property>
+              <property name="date">
+               <date>
+                <year>2023</year>
+                <month>12</month>
+                <day>31</day>
+               </date>
+              </property>
+              <property name="time">
+               <time>
+                <hour>23</hour>
+                <minute>0</minute>
+                <second>0</second>
+               </time>
+              </property>
+              <property name="displayFormat">
+               <string>d/M/yy h:mm</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="2">
+             <widget class="QPushButton" name="report_this_day_btn">
+              <property name="text">
+               <string>За этот день</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="2">
+             <widget class="QPushButton" name="report_past_24h_btn">
+              <property name="text">
+               <string>За 24 часа</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDateTimeEdit" name="report_datetime_till_input">
+              <property name="inputMethodHints">
+               <set>Qt::ImhNone</set>
+              </property>
+              <property name="date">
+               <date>
+                <year>2023</year>
+                <month>12</month>
+                <day>31</day>
+               </date>
+              </property>
+              <property name="time">
+               <time>
+                <hour>23</hour>
+                <minute>0</minute>
+                <second>0</second>
+               </time>
+              </property>
+              <property name="displayFormat">
+               <string>d/M/yy h:mm</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0" colspan="2">
+             <widget class="QPushButton" name="report_show_report_btn">
+              <property name="styleSheet">
+               <string notr="true">background: rgb(143, 240, 164);
+font: 11pt &quot;Cantarell&quot;;
+color:  rgb(0, 0, 0);</string>
+              </property>
+              <property name="text">
+               <string>Показать</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_64">
+              <property name="text">
+               <string>Period End</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="report_symbol_input">
+              <property name="text">
+               <string>ALL</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_65">
+              <property name="text">
+               <string>Symbol</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_63">
+              <property name="text">
+               <string>Period Start</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0" colspan="2">
+             <widget class="QPushButton" name="report_since_startup_btn">
+              <property name="text">
+               <string>С последнего запуска</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <widget class="QPushButton" name="report_show_all_symbols_history_btn">
+              <property name="text">
+               <string>Показать пары за всё время</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="report_show_all_symbols_period_btn">
+              <property name="text">
+               <string>Показать пары за выбраный период</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableView" name="report_all_symbols_history_tableView">
+              <attribute name="horizontalHeaderCascadingSectionResizes">
+               <bool>true</bool>
+              </attribute>
+              <attribute name="horizontalHeaderStretchLastSection">
+               <bool>false</bool>
+              </attribute>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>

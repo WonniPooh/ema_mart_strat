@@ -45,8 +45,6 @@ class StrategyCfg:
         self.pause_bars = None
         self.min_delta_perc = None
 
-        
-
     def parse_jsoned_cfg(self, symbol, symbol_data):
         self.symbol = symbol
         self.allowed_direction = symbol_data["allowed_direction"]

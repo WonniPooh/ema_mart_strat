@@ -17,7 +17,7 @@ from PySide6.QtGui import QBrush
 
 from common import *
 from WsConnector import WsConnector
-from report_construction import RunningDealsDataTableModel, FinishedDealsDataTableModel
+from report_construction import RunningDealsDataTableModel, FinishedDealsDataTableModel, ReportManager
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         self.m_thread = Thread(target=self.run_time_since_start_counter, daemon=True)
         self.m_thread.start()
 
-
+        self.report_manager = ReportManager(self)
         self.log_file = open("strat.log", "a")
         self.allowed_uid = "8768769"
         self.current_balance_color = ""

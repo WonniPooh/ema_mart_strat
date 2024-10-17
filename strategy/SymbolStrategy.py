@@ -35,13 +35,12 @@ def extend_ema(ema_values, price, span):
 
 
 class DealReport:
-    def __init__(self, symbol=None, timeframe="", direction="", leverage=1,
+    def __init__(self, config_id, symbol=None, direction="",
                  ts_start=0, ts_end=0, position_size=0.0, mart_steps=0,
                  total_result=0.0, commission=0.0):
+        self.config_id = config_id
         self.symbol = symbol
-        self.timeframe = timeframe
         self.direction = direction
-        self.leverage = leverage
         self.commission = commission
         self.total_position = position_size
         self.total_result = total_result
@@ -52,17 +51,16 @@ class DealReport:
 
     def convert_to_array(self):
         self.data_as_arr = [
+            self.config_id,
             self.symbol,
-            self.timeframe,
             self.direction,
-            self.leverage,
-            datetime.fromtimestamp(self.timestamp_start).strftime("%d.%m %H:%M:%S"),
-            datetime.fromtimestamp(self.timestamp_end).strftime("%d.%m %H:%M:%S"),
             self.total_position,
             self.mart_steps - 1,
+            self.commission,
             self.total_result,
             round((self.total_result / self.total_position) * 100, 2),
-            self.commission,
+            datetime.fromtimestamp(self.timestamp_end).strftime("%d.%m %H:%M:%S"),
+            datetime.fromtimestamp(self.timestamp_start).strftime("%d.%m %H:%M:%S")
         ]
 
     def get_by_index(self, index):
@@ -223,10 +221,10 @@ class SymbolStrategy():
               f"Avg_price open: {self.avg_price}\n\tAvg_price close: {order_data['data']['order']['avgPrice']}\n\t" +
               f"Commission: {abs(self.commission)}\n\tFinal result: {total_result}")
 
-        deal_report = DealReport(symbol=self.symbol, timeframe=self.cfg.timeframe,
+        deal_report = DealReport(config_id=self.config_id, symbol=self.symbol,
                                  direction="LONG" if self.current_position_side == 1 else "SHORT",
-                                 leverage=self.cfg.leverage, ts_start=self.ts_deal_start,
-                                 ts_end=time.time(), position_size=self.total_position_value,
+                                 ts_start=self.ts_deal_start, ts_end=time.time(), 
+                                 position_size=self.total_position_value,
                                  mart_steps=self.mart_current_steps,
                                  total_result=total_result, commission=abs(self.commission))
 
@@ -435,4 +433,4 @@ class SymbolStrategy():
         elif self.fast_ema[-2] > self.slow_ema[-2] and self.fast_ema[-1] < self.slow_ema[-1]:
             signal = SHORT
 
-        return signal
+        return LONG# signal

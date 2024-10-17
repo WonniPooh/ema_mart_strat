@@ -74,6 +74,14 @@ def handle_client_input(websocket,
 # Function to start WebSocket server
 def start_server(input_cmd_queue, output_cmd_queue):
     # Define a handler for the single WebSocket connection
+    ws_port = 8877
+    try:
+        with open("../port.txt", "r") as f:
+            ws_port = int(f.read())
+    except Exception as e:
+        handle_exception(e)
+        ws_port = 8877
+
     def ws_handler(ws_socket):
         with ws_socket:
             global ACTIVE_CONNECTIONS_COUNT
@@ -86,8 +94,8 @@ def start_server(input_cmd_queue, output_cmd_queue):
                 ACTIVE_CONNECTIONS_COUNT -= 1
 
     # Create a WebSocket server and bind it to a host and port
-    with websockets.sync.server.serve(ws_handler, "localhost", 8877) as server:
-        print("WebSocket server is running on ws://localhost:8877")
+    with websockets.sync.server.serve(ws_handler, "localhost", ws_port) as server:
+        print(f"WebSocket server is running on ws://localhost:{ws_port}")
         server.serve_forever()
 
 # Create a single-threaded WebSocket server

@@ -19,7 +19,10 @@ def construct_db():
                                     side BOOL NOT NULL,              
                                     ts_start INTEGER NOT NULL,
                                     ts_end INTEGER,
+                                    mart_steps INT,
                                     total_result FLOAT,
+                                    total_position FLOAT,
+                                    total_commission FLOAT,
                                     FOREIGN KEY(config_id) REFERENCES configs(record_id));'''
             cur.execute(create_deals_table)
             con.commit()
@@ -97,16 +100,17 @@ def db_new_deal(deal):
     con = sqlite3.connect(db_path)
 
     #deal_open_cmd contains actual values (absolute) of TP and SL
-    set_finished_deal = f'''INSERT INTO deals VALUES (NULL, \"{deal.symbol}\",
+    set_new_deal = f'''INSERT INTO deals VALUES (NULL, \"{deal.symbol}\",
                                                         {deal.config_id},
                                                         {deal.current_position_side},
                                                         {deal.ts_deal_start},
-                                                        NULL, NULL)'''
-
+                                                        NULL, NULL,
+                                                        NULL, NULL,
+                                                        NULL)'''
 
     try:
         cur = con.cursor()
-        cur.execute(set_finished_deal)
+        cur.execute(set_new_deal)
         con.commit()
         return cur.lastrowid
     except Exception as e:
@@ -119,9 +123,11 @@ def db_new_finished_deal(deal_id, finished_deal):
 
     #deal_open_cmd contains actual values (absolute) of TP and SL
     set_finished_deal = f'''UPDATE deals SET ts_end={finished_deal.timestamp_end},
-                                             total_result={finished_deal.total_result}
+                                             mart_steps={finished_deal.mart_steps - 1},
+                                             total_result={finished_deal.total_result},
+                                             total_position={finished_deal.total_position},
+                                             total_commission={finished_deal.commission}
                                          WHERE deal_id={deal_id}'''
-
     try:
         cur = con.cursor()
         cur.execute(set_finished_deal)

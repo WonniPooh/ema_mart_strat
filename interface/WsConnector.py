@@ -19,6 +19,14 @@ class WsConnector:
         self.reconnect_ms_interval = 5000
         self.on_connect = on_connect
 
+        self.ws_port = 8877
+        try:
+            with open("../port.txt", "r") as f:
+                self.ws_port = int(f.read())
+        except Exception as e:
+            print(e)
+            self.ws_port = 8877
+
         self.process_income_msg = msg_processor
         self.try_connect()
 
@@ -47,7 +55,7 @@ class WsConnector:
 
     def try_connect(self):
         print("trying to connect...")
-        self.client.open(QtCore.QUrl("ws://127.0.0.1:8877"))
+        self.client.open(QtCore.QUrl(f"ws://127.0.0.1:{self.ws_port}"))
 
     def onError(self, error_code):
         print("WS FAILED: error code: {}".format(error_code))
