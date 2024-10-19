@@ -44,7 +44,8 @@ with open("interface/mainwindow.py", "w") as file:
 
 shutil.copy("requirements.txt", c_path + "/" + "requirements.txt")
 shutil.copy("python-3.12.5-amd64.exe", c_path + "/" + "python-3.12.5-amd64.exe")
-
+shutil.copy("ws_port.txt", c_path + "/" + "ws_port.txt")
+	    
 for m_dir in ["interface", "strategy"]:
 	dir_files = os.listdir(m_dir)
 	for filename in dir_files:
